@@ -1,2 +1,0 @@
-# territoryManagement
-### a Sails application
