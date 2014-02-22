@@ -1,0 +1,2 @@
+# territoryManager
+### a Sails application
