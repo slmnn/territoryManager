@@ -20,7 +20,11 @@ passport.use(new LocalStrategy(
       if (!user || user.length < 1) { 
         return done(null, false, { message: 'Incorrect User'}); 
       }
-      var sc = simplecrypt({salt:sails.config.sc_salt, password:sails.config.sc_password});
+      try {
+        var sc = simplecrypt({salt:sails.config.sc_salt, password:sails.config.sc_password});
+      } catch(err) {
+        return done(null, false, { message: err});
+      }
       if(sc.encrypt(password) == user[0].password) {
         return done(null, user);
       } else {
