@@ -301,7 +301,7 @@ module.exports = {
           possibleHolders : all_holders,
           actionResult : "Here we can change the territory holder."
         });
-      } else if(request.method == 'POST') {
+      } else if(request.method == 'POST') { 
         Territory.findOne({
           territoryLetter: request.body.input_letter,
           territoryNumber: request.body.input_number
