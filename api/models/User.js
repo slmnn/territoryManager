@@ -6,7 +6,8 @@
  * @docs		:: http://sailsjs.org/#!documentation/models
  */
 
-var simplecrypt = require('simplecrypt');
+// var simplecrypt = require('simplecrypt');
+var bcrypt = require('bcryptjs');
 
 module.exports = {
 
@@ -38,9 +39,17 @@ module.exports = {
     cb(null, user);
   },
   beforeCreate: function(user, cb) {
-    var sc = simplecrypt({salt:sails.config.sc_salt, password:sails.config.sc_password});
-  	user.password = sc.encrypt(user.password);
-  	cb(null, user);
-  }
+      bcrypt.genSalt(10, function(err, salt) {
+        bcrypt.hash(user.password, salt, function(err, hash) {
+          if (err) {
+            console.log(err);
+            cb(err);
+          }else{
+            user.password = hash;
+            cb(null, user);
+          }
+        });
+      });
+    }
 
 };
