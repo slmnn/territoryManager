@@ -1,0 +1,52 @@
+<!--<div class="container">
+  <div class="page-header">
+    <h2><%= i18n('Territories') %></h2>
+  </div>
+</div>-->
+<div class="container">
+  <ul class="breadcrumb list-inline">
+    <%= i18n('Filter') %>:
+    <li><a href="?only_free=true"><%= i18n('Available') %></a> (<a href="?only_free=false"><%= i18n('all') %></a>)</li>
+
+      <!--<% _.each(allLetters, function (letter) {  %>
+        <li> | <a href="?only_free=true&letter=<%= letter %>"><%= letter %> - <%= i18n('available') %></a> (<a href="?letter=<%= letter %>"><%= i18n('all') %></a>) 
+      <% }) %>
+      -->
+
+      &diams; <a href="?taken_days_ago=32&only_free=true"><%= i18n('Not covered in last month and available') %></a> (<a href="?taken_days_ago=32"><%= i18n('all') %></a>) </li>
+      
+  </ul>
+</div>  
+<div class="container">
+  <p class="bg-success"><%= i18n('Showing') %> <%= territories.length %> <%= i18n('territories') %>.</p>
+    <% _.each(availableLetters, function (letter) { %>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h2 class="panel-title"><a href="<%= '/territory/' + letter %>"><%= letter %></a></h2>
+        </div>
+        <div class="panel-body">
+          <ul class="inline">
+            <% _.each(territories, function (t) { %>
+            <% if(letter == t.territoryLetter) { %>
+
+          
+            <li><a href="<%= '/territory/' + t.territoryLetter + '/' + t.territoryNumber %>"><%= t.territoryCode %></a></li>
+            
+            <!--
+            <li><%= i18n('Holder') %>: <%= t.holder %></li>
+            <li><%= i18n('Taken') %>: <% var taken = new Date(t.taken); %> <%= taken.getFullYear() + '-' + (taken.getMonth()+1) + '-' + taken.getDate() %></li> -->
+
+            <% } %>
+            <% }) %>
+          </ul>
+        </div>
+      </div>
+    <% }) %>
+</div>
+
+<div class="container">
+  <ul class="breadcrumb list-inline">
+    <li><a href="/"><%= i18n('Territories on a map') %></a></li> &diams;
+    <li><a href="/territory/actions/add"><%= i18n('Add new territory') %></a></li>
+  </ul>
+</div>

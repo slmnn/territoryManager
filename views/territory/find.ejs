@@ -1,0 +1,108 @@
+<%- partial('../partials/header')%>
+
+<% 
+  function daysBetween(first, second) {
+
+      // Copy date parts of the timestamps, discarding the time parts.
+      var one = new Date(first.getFullYear(), first.getMonth(), first.getDate());
+      var two = new Date(second.getFullYear(), second.getMonth(), second.getDate());
+
+      // Do the math.
+      var millisecondsPerDay = 1000 * 60 * 60 * 24;
+      var millisBetween = two.getTime() - one.getTime();
+      var days = millisBetween / millisecondsPerDay;
+      var months = days / 30;
+      var years = months / 12;
+      
+      days = days % 30;
+      months = months % 12;
+      
+      // Round down.
+      return Math.floor(years) + i18n(' years, ') + Math.floor(months) + i18n(' months and ') + Math.floor(days) + i18n(' days ago');
+  }
+%>
+
+<div class="container">
+
+  <!-- <div class="page-header">
+    <h2><%= i18n('Territory') %></h2>
+  </div>
+-->
+    <% _.each(territories, function (t) { %>
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3 class="panel-title"><a href="/territory/<%= t.territoryLetter %>/<%= t.territoryNumber %>"><%= t.territoryCode %></a><a class="pull-right" href="/territory/actions/update/<%= t.territoryCode %>"><%= i18n('Edit') %></a></h3>
+
+      </div>
+      <div class="panel-body">
+        <dl class="dl-horizontal">
+          <dt><%= i18n('Holder') %></dt><dd><%= t.holder %></dd>
+          <dt><%= i18n('Covered') %></dt><dd><% var taken = new Date(t.taken); %> <%= taken.getFullYear() + '-' + (taken.getMonth()+1) + '-' + taken.getDate() %></dd>
+          <% if(t.holder != viewOptions.defaultHolderName) { %>
+          <dt><%= i18n('This holder since') %></dt>
+          <dd><% var taken = new Date(t.reallyTaken); %> <%= taken.getFullYear() + '-' + (taken.getMonth()+1) + '-' + taken.getDate() %> (<%= i18n('Taken ') %><%= daysBetween(new Date(t.reallyTaken), new Date()) %>)</dd>
+          <% } %>
+          <dt><%= i18n('Description') %></dt><dd><pre><%= t.description %></pre></dd>
+          <dt><%= i18n('Map') %></dt>
+          <dd>
+          <% var c = t.lat + ',' + t.lng %>
+          <img height="200px" src="http://maps.googleapis.com/maps/api/staticmap?center=<%= c %>&zoom=15&size=400x200&maptype=roadmap&markers=color:red%7C<%= c %>&sensor=false" alt="map" />
+          <br/>
+          <br/>
+          </dd>
+          <dt><%= i18n('Change Holder') %></dt>
+          <dd>
+            <form action="/territory/actions/holder" method="post" class="form-inline" role="form">
+              <div class="form-group">
+                <select name="input_holder" id="input_holder" class="form-control">
+                  <% _.each(possibleHolders, function (i) { %>
+                    <option value="<%= i.name %>" <%= (i.name == t.holder) ? "disabled" : "" %> ><%= i.name %></option>
+                  <% }) %>
+                </select>
+                <input  class="form-control" type="hidden"id="input_letter" name="input_letter" value="<%= t.territoryLetter %>">
+                <input  class="form-control" type="hidden"id="input_number" name="input_number" value="<%= t.territoryNumber %>">
+                <button  class="form-control btn btn-default" id="input_submit" type="submit">
+                  <%= i18n('Set') %>
+                </button>
+              </div>
+            </form>
+          </dd>
+          <% if(t.holder != viewOptions.defaultHolderName) { %>
+          <dt><%= i18n('Mark as covered') %></dt>
+          <dd>
+            <form action="/territory/actions/holder" method="post" class="form-inline" role="form">
+              <input type="hidden"id="input_holder" name="input_holder" value="<%= t.holder %>">
+              <input type="hidden"id="input_letter" name="input_letter" value="<%= t.territoryLetter %>">
+              <input type="hidden"id="input_number" name="input_number" value="<%= t.territoryNumber %>">
+              <button id="input_submit" type="submit" class="btn btn-default">
+                <%= i18n('Assign to the same holder again (mark as covered)') %>
+              </button>
+            </form>
+          </dd>
+          <dt><%= i18n('Return') %></dt>
+          <dd>
+            <form action="/territory/actions/holder" method="post" class="form-inline" role="form">
+              <input type="hidden"id="input_holder" name="input_holder" value="<%= viewOptions.defaultHolderName %>">
+              <input type="hidden"id="input_letter" name="input_letter" value="<%= t.territoryLetter %>">
+              <input type="hidden"id="input_number" name="input_number" value="<%= t.territoryNumber %>">
+              <button id="input_submit" type="submit" class="btn btn-default">
+                <%= i18n('Return to the territory desk') %>
+              </button>
+            </form>            
+          </dd>
+          <% } %>
+          <% if(t.holderHistory && t.holderHistory.length > 0) { %>
+          <dt><%= i18n('History') %></dt>
+          <dd>
+              <% _.each(t.holderHistory, function (item) { %>
+                <a href="/holder/<%= item[0] %>"><% var taken = new Date(item[1]); %> <%= taken.getFullYear() + '-' + (taken.getMonth()+1) + '-' + taken.getDate() %></a> 
+              <% }) %>
+          </dd>
+          <% } %>
+        </dl>
+      </div>
+    </li>
+  </div>
+  <% }) %>
+</div>
+<%- partial('../partials/footer') %>

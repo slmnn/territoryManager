@@ -1,0 +1,108 @@
+<!-- Google Maps API v3 -->
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript" src="/js/jquery.js"></script>
+<style>
+	body {
+		padding:0;
+	}
+	#over_map { 
+		position: absolute; background-color: white; top: 10px; left: 10px; z-index: 99; 
+		font-size: 2em; padding: 5px;
+	}
+	.setLimit {
+		font-size: 0.8em;
+	}
+</style>
+<div class="fullscreen" id="fullscreen_map"></div>
+<div id="over_map">
+	<p></p>
+	<div class="setLimit"><%= i18n('Set limit') %> (<span id="input_range_val">32</span>): <input type="range" name="input_range" id="input_range" min="0" max="365" value="31" onMouseup="setTimeout('refresh();', 2000)" onChange="jQuery('#input_range_val').text(parseInt(jQuery('#input_range').val())+1); " /></div>
+</div>
+<script type="text/javascript">
+	// configuration
+	var myZoom = 14;
+	var defaultLat = 61.474440;
+	var defaultLng = 23.881771;
+
+	// sets the map’s type
+	var map = new google.maps.Map(document.getElementById('fullscreen_map'), {
+		zoom: myZoom,
+		center: new google.maps.LatLng(defaultLat, defaultLng),
+		mapTypeId: google.maps.MapTypeId.ROADMAP
+	});
+
+	var info_window = new google.maps.InfoWindow({content: ''});
+
+	var markersArray = [];
+	google.maps.Map.prototype.clearOverlays = function() {
+	  for (var i = 0; i < markersArray.length; i++ ) {
+	    markersArray[i].setMap(null);
+	  }
+	  markersArray.length = 0;
+	}
+
+	var refresh = function( ) {
+		map.clearOverlays();
+
+		// creates a draggable marker to the given coords
+		var myMarker = new google.maps.Marker({
+			position: new google.maps.LatLng(defaultLat, defaultLng),
+			icon: '/images/home.png',
+			draggable: false
+		});
+
+		// centers the map on markers coords
+		map.setCenter(myMarker.position);
+
+		// adds the marker on the map
+		myMarker.setMap(map);
+
+		jQuery.getJSON( "/", function( data ) {
+			var oldDate = new Date();
+			var very_oldDate_ms = oldDate.getTime() - ( 1000 * 60 * 60 * 24 * (parseInt(jQuery('#input_range').val()) + 1) );
+			var oldDate_ms = very_oldDate_ms + 1000 * 60 * 60 * 24 * 30;
+			var bounds = new google.maps.LatLngBounds ();
+			var old_count = 0;
+			var days_to_very_oldDate = Math.floor((oldDate.getTime() - very_oldDate_ms) / (1000 * 60 * 60 * 24));
+		  jQuery.each( data, function( i ) {
+		  	var d = new Date(this.taken);
+		  	var d_ms = d.getTime();
+		  	var z = 1;
+		  	var image = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
+		  	if(oldDate_ms > d_ms && d_ms > very_oldDate_ms) {
+		  		image = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png';
+		  		z = 2;
+		  	} else if (d_ms < very_oldDate_ms) {
+		  		image = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
+		  		old_count++;
+		  		z = 3;
+		  	}
+				var myMarker = new google.maps.Marker({
+						position: new google.maps.LatLng(this.lat, this.lng),
+						draggable: false,
+						title: this.territoryCode,
+						zIndex: z,
+						icon : image,
+						content : ('<b>' + this.territoryCode + '</b><br/><a href="/territory/' + this.territoryLetter + '/' + this.territoryNumber + '"><%= i18n('See details') %></a>'),
+						info: new google.maps.InfoWindow({
+						  content: ('<b>' + this.territoryCode + '</b><br/><a href="/territory/' + this.territoryLetter + '/' + this.territoryNumber + '"><%= i18n('See details') %></a>')
+						})
+				});
+				bounds.extend (myMarker.position);
+
+		    google.maps.event.addListener(myMarker, 'click', function() {
+		        info_window.content = myMarker.content;
+		        info_window.open(map, myMarker);
+		    });
+
+				myMarker.setMap(map);
+
+				markersArray.push(myMarker);
+		  });
+		  map.fitBounds (bounds);
+		  jQuery('#over_map p').text('<%= i18n('Not covered in last') %> ' + days_to_very_oldDate + ' <%= i18n('days') %>: ' + old_count);
+		});
+		setTimeout('refresh()', 1000 * 60 * 60); // refresh once in hour
+	}
+	refresh();
+</script>

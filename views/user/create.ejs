@@ -1,0 +1,44 @@
+<!-- Create new holder -->
+
+<%- partial('../partials/header')%>
+
+<div class="container">
+  <div class="page-header"><%= actionResult %></div>
+
+	<form class="form-horizontal" action="create" method="post">
+		<fieldset>
+
+			<legend><%= i18n('Add new user') %></legend>
+			<div class="control-group">
+			  <label class="control-label" for="input_username"><%= i18n('Username') %> (<%= i18n('required') %>)</label>
+			  <div class="controls">
+			    <input id="input_username" name="input_username" type="text" placeholder="" class="input-xlarge">
+			  </div>
+			</div>
+
+			<div class="control-group">
+			  <label class="control-label" for="input_password1"><%= i18n('Password') %> (<%= i18n('required') %>)</label>
+			  <div class="controls">
+			    <input id="input_password1" name="input_password1" type="password" placeholder="" class="input-xlarge">
+			  </div>
+			</div>
+
+			<div class="control-group">
+			  <label class="control-label" for="input_password2"><%= i18n('Repeat Password') %> (<%= i18n('required') %>)</label>
+			  <div class="controls">
+			    <input id="input_password2" name="input_password2" type="password" placeholder="" class="input-xlarge">
+			  </div>
+			</div>
+
+			<div class="control-group">
+			  <div class="controls">
+			    <button id="input_submit" name="input_submit" class="btn btn-primary">Create new user account</button>
+			  </div>
+			</div>
+
+		</fieldset>
+	</form>
+
+</div>
+
+<%- partial('../partials/footer')%>

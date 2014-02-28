@@ -1,0 +1,55 @@
+<%- partial('../partials/header')%>
+
+<%
+
+function sort_unique(arr) {
+    arr = arr.sort(function (a, b) { return a*1 - b*1; });
+    var ret = [arr[0]];
+    for (var i = 1; i < arr.length; i++) { // start loop at 1 as element 0 can never be a duplicate
+        if (arr[i-1] !== arr[i]) {
+            ret.push(arr[i]);
+        }
+    }
+    return ret;
+}
+
+var shortcuts = function(all_holders) {
+	var letters = [];
+	for(var i = 0; i < all_holders.length; i++) {
+		letters.push(all_holders[i].name.charAt(0).toUpperCase());
+	}
+	return sort_unique(letters);
+}
+
+%>
+
+<div class="container">
+  <div class="page-header">
+  	<h2><%= i18n('Territory holders') %></h2>
+  </div>
+  <% _.each(shortcuts(holders), function (sc) { %>
+  	<h3 style="display:inline"><a href="#<%= sc %>"><%= sc %></a></h3>
+  <% }) %>
+ 	<ul>
+		<% var last = ""; %>
+	  <% _.each(holders, function (h) { %>
+	  <% if(h.name.charAt(0).toUpperCase() != last) { %>
+	  	<% last = h.name.charAt(0).toUpperCase() %>
+	  	<h3><a name="<%= h.name.charAt(0).toUpperCase() %>"></a><%= h.name.charAt(0).toUpperCase() %></h3>
+	  <% } %>
+	  <li>
+	  	<b><a href="<%= '/holder/' + h.id %>"><%= h.name %></a></b>
+	  </li>
+	  <% }) %>
+	</ul>
+</div>
+<%- partial('../partials/footer') %>
+
+<div class="container">
+  <ul class="breadcrumb list-inline">
+    <li><a href="/holder/create"><%= i18n('Add new holder') %></a></li>
+    <% if(viewOptions.currentUsername == 'admin') { %>
+      <li><a href="/holder/destroy"><%= i18n('Remove holder') %></a></li>
+    <% } %>
+  </ul>
+</div>

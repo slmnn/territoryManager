@@ -1,0 +1,43 @@
+<%- partial('../partials/header')%>
+
+<% 
+  function daysBetween(first, second) {
+
+      // Copy date parts of the timestamps, discarding the time parts.
+      var one = new Date(first.getFullYear(), first.getMonth(), first.getDate());
+      var two = new Date(second.getFullYear(), second.getMonth(), second.getDate());
+
+      // Do the math.
+      var millisecondsPerDay = 1000 * 60 * 60 * 24;
+      var millisBetween = two.getTime() - one.getTime();
+      var days = millisBetween / millisecondsPerDay;
+      var months = days / 30;
+      var years = months / 12;
+      
+      days = days % 30;
+      months = months % 12;
+      
+      // Round down.
+      return Math.floor(years) + i18n(' years, ') + Math.floor(months) + i18n(' months and ') + Math.floor(days) + i18n(' days ago');
+  }
+%>
+<div class="container">
+  <div class="page-header"><h2><%= holderName %></h2></div>
+    <% _.each(territories, function (t) { %>
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a href="/territory/<%= t.territoryLetter %>/<%= t.territoryNumber %>"><%= t.territoryCode %></a>
+      </h4>
+    </div>
+    <div class="panel-body">
+      <dl class="dl-horizontal">
+        <dt><%= i18n('Covered') %></dt>
+        <dd><% var taken = new Date(t.taken); %> <%= taken.getFullYear() + '-' + (taken.getMonth()+1) + '-' + taken.getDate() %> (<%= daysBetween(new Date(t.taken), new Date()) %>)</dd>
+        <dt><%= i18n('This holder since') %></dt>
+        <dd><% var taken = new Date(t.reallyTaken); %> <%= taken.getFullYear() + '-' + (taken.getMonth()+1) + '-' + taken.getDate() %> (<%= daysBetween(new Date(t.reallyTaken), new Date()) %>)</dd>
+      </dl>
+    </div>
+    <% }) %>
+</div>
+
+<%- partial('../partials/footer') %>

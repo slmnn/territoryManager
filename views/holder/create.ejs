@@ -1,0 +1,37 @@
+<!-- Create new holder -->
+
+<%- partial('../partials/header')%>
+
+<div class="container">
+  <div class="page-header"><%= actionResult %></div>
+
+	<form class="form-horizontal" action="create" method="post">
+		<fieldset>
+
+			<legend><%= i18n('Add new holder') %></legend>
+			<div class="control-group">
+			  <label class="control-label" for="input_name"><%= i18n('Name') %> (<%= i18n('required') %>)</label>
+			  <div class="controls">
+			    <input id="input_name" name="input_name" type="text" placeholder="John Doe" class="input-xlarge">
+			  </div>
+			</div>
+
+			<div class="control-group">
+			  <label class="control-label" for="input_email"><%= i18n('Email') %> (<%= i18n('required') %>)</label>
+			  <div class="controls">
+			    <input id="input_email" name="input_email" type="text" placeholder="john.doe@example.com" class="input-xlarge">
+			  </div>
+			</div>
+
+			<div class="control-group">
+			  <div class="controls">
+			    <button id="input_submit" name="input_submit" class="btn btn-primary"><%= i18n('Add new holder') %></button>
+			  </div>
+			</div>
+
+		</fieldset>
+	</form>
+
+</div>
+
+<%- partial('../partials/footer')%>
