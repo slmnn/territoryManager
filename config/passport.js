@@ -23,6 +23,7 @@ passport.use(new LocalStrategy(
       try {
         var sc = simplecrypt({salt:sails.config.sc_salt, password:sails.config.sc_password});
       } catch(err) {
+        console.log(err);
         return done(null, false, { message: err});
       }
       if(sc.encrypt(password) == user[0].password) {
