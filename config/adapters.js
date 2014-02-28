@@ -25,10 +25,7 @@ module.exports.adapters = {
   },
   mongo: {
     module   : 'sails-mongo',
-    host     : 'ds027519.mongolab.com',
-    port     : 27519,
-    user     : process.env.DB_USER,
-    password : process.env.DB_PASSWORD,
-    database : process.env.DB_NAME
+    url: process.env.DB_URL,
+    schema: true
   }
 };
