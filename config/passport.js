@@ -1,7 +1,7 @@
 // Location: /config/passport.js
 var passport    = require('passport'),
   LocalStrategy = require('passport-local').Strategy,
-  bcrypt = require('bcryptjs');
+  bcrypt = require('bcrypt');
 
 passport.serializeUser(function(user, done) {
   done(null, user[0].id);

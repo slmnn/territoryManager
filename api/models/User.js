@@ -7,7 +7,7 @@
  */
 
 // var simplecrypt = require('simplecrypt');
-var bcrypt = require('bcryptjs');
+var bcrypt = require('bcrypt');
 
 module.exports = {
 
