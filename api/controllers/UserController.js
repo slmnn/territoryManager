@@ -28,6 +28,7 @@ module.exports = {
 	},
   
 	initAdminUser : function(req, res) {
+		console.log(sails.config.just_test);
 		if(req.method == 'GET') {
 			User.findOne({'username':'admin'})
 			.exec(function(err, a){
