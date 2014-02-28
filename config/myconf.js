@@ -1,4 +1,5 @@
 module.exports = {
+	just_test : process.env.JUST_TEST,
   sc_salt : process.env.SC_SALT,
   sc_password : process.env.SC_PASSWORD,
 
