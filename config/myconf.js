@@ -6,5 +6,5 @@ module.exports = {
   default_territory_holder_id : 1,
   admin_init_password : '2348jhj3hh',
 
-  territory_letters : ['A','K','L','M'],
+  territory_letters : ['A','K','L','M']
 };
