@@ -10,6 +10,7 @@
         "sails-mongo": "0.9.7",
         "simplecrypt": "0.0.2",
         "passport": "0.2.0",
+        "passport-local": "0.1.6",
         "ejs": "0.8.4",
         "optimist": "0.3.4"
     },
