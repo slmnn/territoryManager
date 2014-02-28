@@ -44,7 +44,7 @@ module.exports = {
     },
 
   	/* Holder id */
-    holder : "INTEGER",
+    holder : "STRING",
 
     /* Coordinates */
     lat : "FLOAT",

@@ -201,7 +201,7 @@ module.exports = {
       oldDate.setTime(oldDate.getTime() - milliseconds_ago);
       filter.taken = { '<=' : oldDate };
     }
-  	Territory.find(filter).exec(function(err, all) {
+  	Territory.find(filter).sort('territoryCode').exec(function(err, all) {
       Holder.find().exec(function(err, h){
         var t_with_names = convertHolderIDtoName(all, h);
   	  	if(request.wantsJSON) {
@@ -294,6 +294,7 @@ module.exports = {
   holder : function(request, response) {
     pageOptions.defaultHolderName = sails.config.default_territory_holder;
     Holder.find().exec(function(err, all_holders) {
+      console.log(all_holders);
       if(request.method == 'GET') {
         pageOptions.breadcrumbs = [{name : 'Territories', link : '/territory'}, {name : 'Change Holder', link : null}];
         return response.view({
@@ -302,16 +303,19 @@ module.exports = {
           actionResult : "Here we can change the territory holder."
         });
       } else if(request.method == 'POST') { 
-        Territory.findOne({
-          territoryLetter: request.body.input_letter,
-          territoryNumber: request.body.input_number
+        Territory.find({
+          'territoryLetter': request.body.input_letter,
+          'territoryNumber': parseInt(request.body.input_number)
         }).exec(function(err, t) {
           if(err)
             return response.json(err, 500);
-          if(!t)
-            return response.json("Something fishy with the territory...", 500);
+          if(!t || t.length != 1) {
+            console.log(t, request.body.input_number, request.body.input_letter);
+            return response.json("There is no suitable territory", 500);
+          }
+          t = t[0];
           if(request.body.input_holder && request.body.input_holder.length > 0) {
-            Holder.findOne({name : request.body.input_holder})
+            Holder.findOne({'name' : request.body.input_holder})
             .exec(function(err, h) {
               if(err)
                 return response.json(err, 500);
