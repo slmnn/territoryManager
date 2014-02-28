@@ -3,13 +3,6 @@ var passport    = require('passport'),
   LocalStrategy = require('passport-local').Strategy,
   simplecrypt = require('simplecrypt');
 
-var sc = simplecrypt(
-  {
-    salt: "asdsaasgajkj35i20+jt4+jjkojkoasdjfkopfj8930+j2+fkowpfjkofpjaf",
-    password: "mcksdmc3289rh0cfusd023rh238urh23riuhfsdfiohu342"
-  }
-);
-
 passport.serializeUser(function(user, done) {
   done(null, user[0].id);
 });
