@@ -37,6 +37,8 @@ npm-debug.log
 .netbeans
 nbproject
 .idea
+territoryManager.sublime-project
+territoryManager.sublime-workspace
 
 
 ########################

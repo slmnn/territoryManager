@@ -23,5 +23,5 @@ module.exports.adapters = {
   disk: {
     module: 'sails-disk'
   }
-  
+
 };

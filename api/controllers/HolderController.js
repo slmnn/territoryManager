@@ -113,12 +113,39 @@ module.exports = {
         return response.view({
           holders : h,
           viewOptions : pageOptions,
-          actionResult : "Please select a holder to be removed. All territories assigned to the holder will be returned to the default holder."
+          actionResult : "Please select a holder to be removed. All territories assigned to the holder will be returned to the default holder. If you want to mark territories as covered, it needs to be done manually."
         });
       });
 
     } else if(request.method == 'POST') {
-      return response.send("TODO", 200);
+      if(!request.body.input_name) {
+        return response.send("The holder is not specified", 500);
+      }
+      // Return territories to the default user and then destroy the holder
+      Holder.findOne({ name: request.body.input_name })
+      .exec(function(err, h) {
+        if(err || !h) return response.send(err, 500);
+        Territory.update(
+          { holder : h.id },
+          { 
+            holder : sails.config.default_territory_holder_id,
+            taken : new Date(),
+            reallyTaken : new Date()
+          },
+          function(err, t) {
+            if(err) return response.send(err, 500);
+            var affectedTerritories = [];
+            for(var i = 0; i < t.length; i++) {
+              affectedTerritories.push(t[i].territoryCode);
+            }
+            Holder.destroy({id:h.id}).done(function(err){
+              if(err) return response.send(err, 500);
+              console.log("Removed " + h.name);
+              return response.redirect('/holder/destroy');
+            });
+          }
+        );
+      });
     }
   },
 
@@ -130,7 +157,6 @@ module.exports = {
   		Territory.find({holder : request.params.id})
       .sort('territoryCode')
   		.exec(function(err, t) {
-				console.log("Find ", request.params.id, h, t);
         pageOptions.breadcrumbs = [{name : 'Territory holders', link : '/holder'}, {name : h.name, link : null}];
 	      return response.view({
           viewOptions : pageOptions,

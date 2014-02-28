@@ -52,6 +52,7 @@ module.exports = {
 	},
 
 	create : function (req, res) {
+		pageOptions.breadcrumbs = [{name : 'User management', link : '/user/update'}, {name: 'Create user', link:null}];
     if(req.method == 'GET') {
 			if(!req.user || req.user[0].username != "admin") {
 				return res.send("Forbidden", 403);
@@ -81,21 +82,38 @@ module.exports = {
 					actionResult : "Username should be longer"
 				});
 			}
-			User.create(
-				{
-					username:req.body.input_username,
-					password:req.body.input_password1
-				}
-			).done(function(err, u){
+			if(req.body.input_username == "admin") {
 				return res.view({
 					viewOptions: pageOptions,
-					actionResult : "User created!"
+					actionResult : "Username can not be 'admin'"
 				});
+			}
+			User.find({username : req.body.input_username}).exec(function(err, u) {
+				if(err) return res.send(err, 500);
+				if(u && u.length > 0) {
+					return res.view({
+						viewOptions: pageOptions,
+						actionResult : "Username is already taken!"
+					});					
+				}
+				User.create(
+					{
+						username:req.body.input_username,
+						password:req.body.input_password1
+					}
+				).done(function(err, u){
+					return res.view({
+						viewOptions: pageOptions,
+						actionResult : "User " + u.username + " created!"
+					});				
+				});				
 			});
+
 		}
 	},
 
 	update : function (req, res) {
+		pageOptions.breadcrumbs = [{name : 'User management', link : null}];
     if(req.method == 'GET') {
     	pageOptions.currentUsername = req.user[0].username;
 			if(!req.user || !req.user[0].id) {
@@ -137,6 +155,43 @@ module.exports = {
 				}
 			);
 		}
+	},
+
+	destroy : function(req, res) {
+    pageOptions.breadcrumbs = [{name : 'User management', link : '/user/update'}, {name: 'Remove user', link:null}];
+    pageOptions.currentUsername = req.user[0].username; 
+    if(req.method == 'GET') {
+    	if(!req.user || req.user[0].username != "admin") {
+				return res.send("Forbidden", 403);
+			}
+      User.find().exec(function(err, u) {
+        for(var i = 0; i < u.length; i++) {
+          if(u[i].username == 'admin')
+            u.splice(i, 1);
+        }
+        return res.view({
+          users : u,
+          viewOptions : pageOptions,
+          actionResult : "Please select an user account to be removed."
+        });
+      });
+
+    } else if(req.method == 'POST') {
+    	if(!req.user || req.user[0].username != "admin") {
+				return res.send("Forbidden", 403);
+			}
+      if(!req.body.input_id) {
+        return res.send("The holder is not specified", 500);
+      }
+      if(req.user[0].id == req.body.input_id) {
+				return res.send("You can't remove your own account.", 403);
+			}
+			User.destroy({ id : req.body.input_id }).done(function(err){
+				if(err) res.send(err, 500);
+				console.log("Removed " + req.body.input_id);
+				return res.redirect('/user/destroy');
+			});
+    }
 	},
 
   /**

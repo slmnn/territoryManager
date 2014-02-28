@@ -91,7 +91,6 @@ module.exports = {
         number : request.param('territoryNumber')
       },
       function(data, code) {
-        console.log('create', data, code);
         return response.json(data, code);
       });
   },
@@ -114,9 +113,6 @@ module.exports = {
         });
       })
     } else if(request.method == 'POST') {
-
-      console.log("Updating: " + request.params.id);
-
       Territory.update(
         {territoryCode:request.params.id},
         {
@@ -306,7 +302,6 @@ module.exports = {
           actionResult : "Here we can change the territory holder."
         });
       } else if(request.method == 'POST') {
-        console.log("Changing territory holder!", request.body);
         Territory.findOne({
           territoryLetter: request.body.input_letter,
           territoryNumber: request.body.input_number
@@ -330,11 +325,9 @@ module.exports = {
               if(t.holder != sails.config.default_territory_holder_id)
                 t.holderHistory.push([t.holder, new Date()]);
               t.holder = h.id;
-              t.territoryCode = t.territoryLetter + t.territoryNumber;
               t.taken = new Date();
               t.save(function(err) {
                 if(err) return response.send(err, 500);
-                console.log(t);
                 return response.redirect('territory/' + request.body.input_letter + '/' + request.body.input_number);
               });            
             });

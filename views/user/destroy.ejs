@@ -7,14 +7,14 @@
     <form class="form-horizontal" action="destroy" method="post">
     <fieldset>
 
-      <legend><%= i18n('Remove holder') %></legend>
+      <legend><%= i18n('Remove user') %></legend>
 
       <div class="control-group">
-        <label class="control-label" for="input_name"><%= i18n('Name') %></label>
+        <label class="control-label" for="input_id"><%= i18n('Name') %></label>
         <div class="controls">
-          <select id="input_name" name="input_name" class="form-control">
-            <% _.each(holders, function (h) { %>
-              <option value="<%= h.name %>"><%= h.name %></option>
+          <select id="input_id" name="input_id" class="form-control">
+            <% _.each(users, function (u) { %>
+              <option value="<%= u.id %>"><%= u.username %></option>
             <% }) %>            
           </select>
         </div>
@@ -22,7 +22,7 @@
 
       <div class="control-group">
         <div class="controls">
-          <button id="input_submit" name="input_submit" class="btn btn-primary"><%= i18n('Remove holder') %></button>
+          <button id="input_submit" name="input_submit" class="btn btn-primary"><%= i18n('Remove user') %></button>
         </div>
       </div>
 
