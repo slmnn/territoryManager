@@ -415,7 +415,6 @@ module.exports = {
                 if(h[j].id == t_with_holder_names[i].holderHistory[k][0]) {
                   t_with_holder_names[i].holderHistory[k][0] = h[j].name;
                   t_with_holder_names[i].holderHistoryWithNames.push([h[j].name, t_with_holder_names[i].holderHistory[k][1]]);
-                  continue;
                 }
               }
             }
