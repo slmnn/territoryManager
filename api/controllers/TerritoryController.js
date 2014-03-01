@@ -411,7 +411,7 @@ module.exports = {
             t_with_holder_names[i].holderHistoryWithNames = [];
             for(var k = 0; k < t_with_holder_names[i].holderHistory.length; k++) {
               for(var j = 0; j < h.length; h++) {
-                console.log(t_with_holder_names[i].holderHistory[k][0], h[j].id);
+                console.log(i, k, j, t_with_holder_names[i].holderHistory[k][0], h[j].id, h[j].name);
                 if(h[j].id == t_with_holder_names[i].holderHistory[k][0]) {
                   t_with_holder_names[i].holderHistory[k][0] = h[j].name;
                   t_with_holder_names[i].holderHistoryWithNames.push([h[j].name, t_with_holder_names[i].holderHistory[k][1]]);
