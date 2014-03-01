@@ -35,6 +35,7 @@
   " days"  : " päivää",
   " years, "  : " vuotta, ",
   "Description"  : "Kuvaus",
+  "Address, etc."  : "Osoite jne.",
   "Please input holder information."  : "Anna tiedot",
   "Name and email are not ok."  : "Nimi tai sähköposti ei kelpaa.",
   "Sorry, something went wrong: "  : "Hups, jotain on vialla: ",
