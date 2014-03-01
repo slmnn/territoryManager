@@ -257,7 +257,7 @@ module.exports = {
       return response.send("Forbidden", 403);
     }    
     if(request.method == 'GET') {
-      Territory.find().exec(function(err, u) {
+      Territory.find().exec(function(err, t) {
         return response.view({
           territories : t,
           viewOptions : pageOptions,
