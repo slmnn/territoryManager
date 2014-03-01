@@ -252,27 +252,27 @@ module.exports = {
 
   destroy : function(request, response) {
     pageOptions.breadcrumbs = [{name : 'Territories', link : '/territory'}, {name: 'Remove territory', link:null}];
-    pageOptions.currentUsername = req.user[0].username; 
-    if(!req.user || req.user[0].username != "admin") {
-      return res.send("Forbidden", 403);
+    pageOptions.currentUsername = request.user[0].username; 
+    if(!request.user || request.user[0].username != "admin") {
+      return response.send("Forbidden", 403);
     }    
-    if(req.method == 'GET') {
+    if(request.method == 'GET') {
       Territory.find().exec(function(err, u) {
-        return res.view({
+        return response.view({
           territories : t,
           viewOptions : pageOptions,
           actionResult : "Please select a territory to be removed."
         });
       });
 
-    } else if(req.method == 'POST') {
-      if(!req.body.input_id) {
-        return res.send("The territory is not specified", 500);
+    } else if(request.method == 'POST') {
+      if(!request.body.input_id) {
+        return response.send("The territory is not specified", 500);
       }
-      Territory.destroy({ 'id' : req.body.input_id }).done(function(err){
-        if(err) res.send(err, 500);
-        console.log("Removed " + req.body.input_id);
-        return res.redirect('/territory/destroy');
+      Territory.destroy({ 'id' : request.body.input_id }).done(function(err){
+        if(err) response.send(err, 500);
+        console.log("Removed " + request.body.input_id);
+        return response.redirect('/territory/destroy');
       });
     }
   },
