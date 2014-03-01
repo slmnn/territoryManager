@@ -225,28 +225,26 @@ module.exports = {
             }
           }
 
+          var out_t = [];
           if(request.query.taken_days_ago) {
-            var t_before_old_date = [];
             for(var i = 0; i < t_with_names.length; i++) {
               if(oldDate.getTime() > new Date(t_with_names[i].taken).getTime()) {
-                t_before_old_date.push(t_with_names[i]);
+                out_t.push(t_with_names[i]);
               }
             }
+          } else {
+            out_t = t_with_names;
+          }
 
+          Territory.count(function(err, count_all) {
             return response.view({
               viewOptions: pageOptions,
               allLetters : possibleLetters,
               availableLetters : only_available_letters,
-              territories : t_before_old_date
+              totalCount : count_all,
+              territories : out_t
             });
-          }
-
-  		  	return response.view({
-            viewOptions: pageOptions,
-            allLetters : possibleLetters,
-            availableLetters : only_available_letters,
-  		  		territories : t_with_names
-  		  	});
+          });
   	  	}
       });
   	});

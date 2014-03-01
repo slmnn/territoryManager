@@ -1,17 +1,17 @@
 <div class="container">
   <div class="page-header">
-    <h2><%= i18n('Login') %></h2>
+    <h2><%= i18n('Log in') %></h2>
   </div>
   <div>
 
   <form action="/login" method="post" class="form-horizontal">
     <fieldset>
-      <label for="username">Username</label>
+      <label for="username"><%= i18n('Username') %></label>
       <input type="text" name="username" class="input-xlarge"></input>
-      <label for="password">Password</label>
+      <label for="password"><%= i18n('Password') %></label>
       <input type="password" name="password" class="input-xlarge"></input>
       <br/><br/>
-      <input type="submit" value="Log in" class="btn btn-primary"></input>
+      <input type="submit" value="<%= i18n('Log in') %>" class="btn btn-primary"></input>
     </fieldset>  
   </form>
 
