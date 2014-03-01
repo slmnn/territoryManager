@@ -104,7 +104,8 @@ module.exports = {
   destroy : function(request, response) {
     pageOptions.breadcrumbs = [{name : 'Territory holders', link : '/holder'}, {name : 'Remove Holder', link : null}];
     pageOptions.currentUsername = request.user[0].username; 
-    if(request.user || request.user[0].username != 'admin') {
+    console.log(request.user[0].username);
+    if(!request.user || request.user[0].username != 'admin') {
       return response.send("Forbidden", 403);
     }
     if(request.method == 'GET') {
