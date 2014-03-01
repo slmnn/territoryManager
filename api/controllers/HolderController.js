@@ -155,7 +155,7 @@ module.exports = {
   	.exec(function(err, h) {
   		if(err || !h) return response.notFound();
   		Territory.find({holder : request.params.id})
-      .sort('territoryCode')
+      .sort('territoryLetter').sort('territoryNumber')
   		.exec(function(err, t) {
         pageOptions.breadcrumbs = [{name : 'Territory holders', link : '/holder'}, {name : h.name, link : null}];
 	      return response.view({
@@ -173,7 +173,7 @@ module.exports = {
     .sort('name')
   	.exec(function(err, h){
   		Territory.find()
-      .sort('territoryCode')
+      .sort('territoryLetter').sort('territoryNumber')
   		.exec(function(err, t) {
         console.log(h,t);
         var only_holders_with_territories = [];
