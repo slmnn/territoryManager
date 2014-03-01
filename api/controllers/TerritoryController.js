@@ -377,6 +377,7 @@ module.exports = {
         var new_t = t[i];
         new_t.holder = undefined;
         new_t.description = undefined;
+        new_t.history = undefined;
         anon_t.push(new_t);
       }
       if(!err && anon_t.length > 0) {
@@ -391,6 +392,50 @@ module.exports = {
       } else {
         return response.send("Error: " + err, 500)
       }
+    });
+  },
+
+  s13 : function(request, response) {
+    pageOptions.defaultHolderName = sails.config.default_territory_holder;
+    var possibleLetters = figureOutPossibleLetters();
+    Territory.find()
+    .exec(function(err, t) {
+      Holder.find()
+      .exec(function(err, h) {
+        // Match current holder id's with holder names
+        for(var i = 0; i < t.length; i++) {
+          for(var j = 0; j < h.length; h++) {
+            if(h[j].id == t[i].holder) {
+              t[i].holder = h[j].name;
+              break;
+            }
+          }
+        }        
+        // Match territory history[0] with holder id and replace with name
+        for(var i = 0; i < t.length; i++) {
+          for(var k = 0; k < t[i].history.length; k++) {
+            for(var j = 0; j < h.length; h++) {
+              if(h[j].id == t[i].history[k][0]) {
+                t[i].history[k][0] = h[j].name;
+                break;
+              }
+            }            
+          }
+        } 
+        if(!err && t.length > 0) {
+          if(request.wantsJSON) {
+            return response.json(anon_t);
+          }
+          return response.view({
+            viewOptions : pageOptions,
+            availableLetters : possibleLetters,
+            territories : anon_t
+          }); 
+        } else {
+          return response.send("Error: " + err, 500)
+        }        
+      })
+
     });
   },
 
