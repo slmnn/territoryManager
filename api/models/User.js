@@ -6,7 +6,7 @@
  * @docs		:: http://sailsjs.org/#!documentation/models
  */
 
-if(process.env.USE_BCRYPT == true) {
+if(process.env.USE_BCRYPT == 'true') {
   var bcrypt = require('bcrypt');
 } else {
   var simplecrypt = require('simplecrypt');
@@ -37,7 +37,7 @@ module.exports = {
     }
   },
   beforeUpdate: function(user, cb) {
-    if(process.env.USE_BCRYPT == true) {
+    if(process.env.USE_BCRYPT == 'true') {
       bcrypt.genSalt(10, function(err, salt) {
         bcrypt.hash(user.password, salt, function(err, hash) {
           if (err) {
@@ -56,7 +56,7 @@ module.exports = {
     }
   },
   beforeCreate: function(user, cb) {
-    if(process.env.USE_BCRYPT == true) {
+    if(process.env.USE_BCRYPT == 'true') {
       bcrypt.genSalt(10, function(err, salt) {
         bcrypt.hash(user.password, salt, function(err, hash) {
           if (err) {

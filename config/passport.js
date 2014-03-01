@@ -2,7 +2,7 @@
 var passport    = require('passport'),
   LocalStrategy = require('passport-local').Strategy;
 
-if(process.env.USE_BCRYPT == true) {
+if(process.env.USE_BCRYPT == 'true') {
   var bcrypt = require('bcrypt');
 } else {
   var simplecrypt = require('simplecrypt');
@@ -25,7 +25,7 @@ passport.use(new LocalStrategy(
       if (!user || user.length < 1) { 
         return done(null, false, { message: 'Incorrect User'}); 
       }
-      if(process.env.USE_BCRYPT == true) {
+      if(process.env.USE_BCRYPT == 'true') {
         bcrypt.compare(password, user[0].password, function(err, res) {
           if (!res) return done(null, false, { message: 'Invalid Password'});
           return done(null, user);
