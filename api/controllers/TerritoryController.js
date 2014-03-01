@@ -215,6 +215,7 @@ module.exports = {
   	  	} else {
 
           var possibleLetters = figureOutPossibleLetters();
+          var only_available_letters = [];
           for(var i = 0; i < possibleLetters.length; i++) {
             for(var j = 0; j < t_with_names.length; j++) {
               if(possibleLetters[i] == t_with_names[j].territoryLetter) {
@@ -231,7 +232,6 @@ module.exports = {
                 t_before_old_date.push(t_with_names[i]);
               }
             }
-            var only_available_letters = [];
 
             return response.view({
               viewOptions: pageOptions,
