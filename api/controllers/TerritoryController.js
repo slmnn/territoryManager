@@ -30,6 +30,9 @@ var createNewTerritory = function(in_territory, callback) {
   if(!in_territory.letter || !in_territory.number) {
     callback("Missing letter or number!", 500);
   }
+  if(isNaN(in_territory.number)) {
+    callback("Territory number is not valid", 500);
+  }
   if(!in_territory.lat || !in_territory.lng) {
     callback("Missing latitude or longitude!", 500);
   }
@@ -267,7 +270,7 @@ module.exports = {
       createNewTerritory(
         { 
           letter : request.body.input_letter, 
-          number : request.body.input_number, 
+          number : parseInt(request.body.input_number), 
           lat : request.body.input_lat, 
           lng : request.body.input_lng, 
           description : request.body.input_description
@@ -283,6 +286,7 @@ module.exports = {
           } else {
             return response.view({
               viewOptions: pageOptions,
+              lastLetter : data.territoryLetter,
               availableLetters : possibleLetters,
               actionResult : "New Territory (" + data.territoryLetter + data.territoryNumber + ") Created!"
             }); 

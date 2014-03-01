@@ -15,6 +15,9 @@
 		  <div class="controls">
 		    <select id="input_letter" name="input_letter" class="input-xlarge">
 					<% _.each(availableLetters, function (i) { %>
+						<% if(typeof lastLetter != 'undefined' && lastLetter == i) { %>
+							<option value="<%= i %>" selected><%= i %></option>
+						<% } %>
 						<option value="<%= i %>"><%= i %></option>
 					<% }) %>
 		    </select>

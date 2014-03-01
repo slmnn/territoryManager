@@ -1,15 +1,15 @@
 <div class="container">
   <div class="page-header">
-    <h2><%= i18n('Login') %></h2>
+    <h2><%= i18n('Log in') %></h2>
   </div>
   <div>
 
   <form action="/login" method="post">
-    <label>Username</label>
+    <label><%= i18n('Username') %></label>
     <input type="text" name="username"></input>
-    <label>Password</label>
+    <label><%= i18n('Password') %></label>
     <input type="password" name="password"></input>
-    <input type="submit" value="Log in"></input>
+    <input type="submit" value="<%= i18n('Log in') %>"></input>
   </form>
 
 </div>
