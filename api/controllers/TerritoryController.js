@@ -216,8 +216,8 @@ module.exports = {
 
           var possibleLetters = figureOutPossibleLetters();
           for(var i = 0; i < possibleLetters.length; i++) {
-            for(var j = 0; j < t_before_old_date.length; j++) {
-              if(possibleLetters[i] == t_before_old_date[j].territoryLetter) {
+            for(var j = 0; j < t_with_names.length; j++) {
+              if(possibleLetters[i] == t_with_names[j].territoryLetter) {
                 only_available_letters.push(possibleLetters[i]);
                 break;
               }
