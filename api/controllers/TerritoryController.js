@@ -413,13 +413,17 @@ module.exports = {
         }        
         // Match territory holderHistory[0] with holder id and replace with name
         for(var i = 0; i < t.length; i++) {
-          for(var k = 0; k < t[i].holderHistory.length; k++) {
-            for(var j = 0; j < h.length; h++) {
-              if(h[j].id == t[i].holderHistory[k][0]) {
-                t[i].holderHistory[k][0] = h[j].name;
-                break;
+          if(t[i].holderHistory)
+            for(var k = 0; k < t[i].holderHistory.length; k++) {
+              for(var j = 0; j < h.length; h++) {
+                if(h[j].id == t[i].holderHistory[k][0]) {
+                  t[i].holderHistory[k][0] = h[j].name;
+                  break;
+                }
               }
-            }            
+            }
+          } else {
+            t[i].holderHistory = [];
           }
         } 
         if(!err && t.length > 0) {
