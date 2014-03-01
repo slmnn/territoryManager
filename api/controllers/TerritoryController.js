@@ -403,37 +403,31 @@ module.exports = {
       Holder.find()
       .exec(function(err, h) {
         // Match current holder id's with holder names
-        for(var i = 0; i < t.length; i++) {
-          for(var j = 0; j < h.length; h++) {
-            if(h[j].id == t[i].holder) {
-              t[i].holder = h[j].name;
-              break;
-            }
-          }
-        }        
+        var t_with_holder_names = convertHolderIDtoName(t, h);
+
         // Match territory holderHistory[0] with holder id and replace with name
-        for(var i = 0; i < t.length; i++) {
-          if(t[i].holderHistory) { 
-            for(var k = 0; k < t[i].holderHistory.length; k++) {
+        for(var i = 0; i < t_with_holder_names.length; i++) {
+          if(t_with_holder_names[i].holderHistory) { 
+            for(var k = 0; k < t_with_holder_names[i].holderHistory.length; k++) {
               for(var j = 0; j < h.length; h++) {
-                if(h[j].id == t[i].holderHistory[k][0]) {
-                  t[i].holderHistory[k][0] = h[j].name;
+                if(h[j].id == t_with_holder_names[i].holderHistory[k][0]) {
+                  t_with_holder_names[i].holderHistory[k][0] = h[j].name;
                   break;
                 }
               }
             }
           } else {
-            t[i].holderHistory = [];
+            t_with_holder_names[i].holderHistory = [];
           }
         } 
-        if(!err && t.length > 0) {
+        if(!err && t_with_holder_names.length > 0) {
           if(request.wantsJSON) {
-            return response.json(t);
+            return response.json(t_with_holder_names);
           }
           return response.view({
             viewOptions : pageOptions,
             availableLetters : possibleLetters,
-            territories : t
+            territories : t_with_holder_names
           }); 
         } else {
           return response.send("Error: " + err, 500)
