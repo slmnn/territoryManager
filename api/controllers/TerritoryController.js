@@ -173,7 +173,7 @@ module.exports = {
   			return response.json(t, 200);
   		})
   	} else {
-  		Territory.find(searchParameters).exec(function(err, t) {
+  		Territory.find(searchParameters).sort('territoryLetter').sort('territoryNumber').exec(function(err, t) {
         Holder.find().exec(function(err, h) {
           var t_with_names = convertHolderIDtoName(t, h);
           pageOptions.currentUsername = request.user[0].username;
@@ -204,7 +204,8 @@ module.exports = {
       oldDate.setTime(oldDate.getTime() - milliseconds_ago);
       filter.taken = { '<=' : oldDate };
     }
-  	Territory.find(filter).sort('territoryCode').exec(function(err, all) {
+  	Territory.find(filter).sort('territoryLetter').sort('territoryNumber')
+    .exec(function(err, all) {
       Holder.find().exec(function(err, h){
         var t_with_names = convertHolderIDtoName(all, h);
   	  	if(request.wantsJSON) {
