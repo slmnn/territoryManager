@@ -250,6 +250,33 @@ module.exports = {
   	});
   },
 
+  destroy : function(request, response) {
+    pageOptions.breadcrumbs = [{name : 'Territories', link : '/territory'}, {name: 'Remove territory', link:null}];
+    pageOptions.currentUsername = req.user[0].username; 
+    if(!req.user || req.user[0].username != "admin") {
+      return res.send("Forbidden", 403);
+    }    
+    if(req.method == 'GET') {
+      Territory.find().exec(function(err, u) {
+        return res.view({
+          territories : t,
+          viewOptions : pageOptions,
+          actionResult : "Please select a territory to be removed."
+        });
+      });
+
+    } else if(req.method == 'POST') {
+      if(!req.body.input_id) {
+        return res.send("The territory is not specified", 500);
+      }
+      Territory.destroy({ 'id' : req.body.input_id }).done(function(err){
+        if(err) res.send(err, 500);
+        console.log("Removed " + req.body.input_id);
+        return res.redirect('/territory/destroy');
+      });
+    }
+  },
+
   add : function(request, response) {
     pageOptions.defaultHolderName = sails.config.default_territory_holder;
     pageOptions.breadcrumbs = [{name : 'Territories', link : '/territory'}, {name : 'Add new territory', link : null}];

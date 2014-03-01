@@ -160,10 +160,10 @@ module.exports = {
 	destroy : function(req, res) {
     pageOptions.breadcrumbs = [{name : 'User management', link : '/user/update'}, {name: 'Remove user', link:null}];
     pageOptions.currentUsername = req.user[0].username; 
+  	if(!req.user || req.user[0].username != "admin") {
+			return res.send("Forbidden", 403);
+		}    
     if(req.method == 'GET') {
-    	if(!req.user || req.user[0].username != "admin") {
-				return res.send("Forbidden", 403);
-			}
       User.find().exec(function(err, u) {
         for(var i = 0; i < u.length; i++) {
           if(u[i].username == 'admin')
@@ -177,9 +177,6 @@ module.exports = {
       });
 
     } else if(req.method == 'POST') {
-    	if(!req.user || req.user[0].username != "admin") {
-				return res.send("Forbidden", 403);
-			}
       if(!req.body.input_id) {
         return res.send("The holder is not specified", 500);
       }

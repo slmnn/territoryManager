@@ -53,6 +53,10 @@
   <ul class="breadcrumb list-inline">
     <li><a href="/"><%= i18n('Territories on a map') %></a></li> &diams;
     <li><a href="/territory/actions/add"><%= i18n('Add new territory') %></a></li>
+    <% if(viewOptions.currentUsername == 'admin') { %>
+       &diams;
+      <li><a href="/territory/destroy"><%= i18n('Remove territory') %></a></li>
+    <% } %>
   </ul>
 </div>
 
