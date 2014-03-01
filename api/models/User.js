@@ -6,7 +6,11 @@
  * @docs		:: http://sailsjs.org/#!documentation/models
  */
 
-var simplecrypt = require('simplecrypt');
+if(process.env.USE_BCRYPT == true) {
+  var bcrypt = require('bcrypt');
+} else {
+  var simplecrypt = require('simplecrypt');
+}
 
 module.exports = {
 
@@ -33,14 +37,42 @@ module.exports = {
     }
   },
   beforeUpdate: function(user, cb) {
-    var sc = simplecrypt({salt:sails.config.sc_salt, password:sails.config.sc_password});
-    user.password = sc.encrypt(user.password);
-    cb(null, user);
+    if(process.env.USE_BCRYPT == true) {
+      bcrypt.genSalt(10, function(err, salt) {
+        bcrypt.hash(user.password, salt, function(err, hash) {
+          if (err) {
+            console.log(err);
+            cb(err);
+          }else{
+            user.password = hash;
+            cb(null, user);
+          }
+        });
+      });
+    } else {
+      var sc = simplecrypt({salt:sails.config.sc_salt, password:sails.config.sc_password});
+      user.password = sc.encrypt(user.password);
+      cb(null, user);
+    }
   },
   beforeCreate: function(user, cb) {
-    var sc = simplecrypt({salt:sails.config.sc_salt, password:sails.config.sc_password});
-  	user.password = sc.encrypt(user.password);
-  	cb(null, user);
+    if(process.env.USE_BCRYPT == true) {
+      bcrypt.genSalt(10, function(err, salt) {
+        bcrypt.hash(user.password, salt, function(err, hash) {
+          if (err) {
+            console.log(err);
+            cb(err);
+          }else{
+            user.password = hash;
+            cb(null, user);
+          }
+        });
+      });
+    } else {
+      var sc = simplecrypt({salt:sails.config.sc_salt, password:sails.config.sc_password});
+      user.password = sc.encrypt(user.password);
+      cb(null, user);
+    }
   }
 
 };
