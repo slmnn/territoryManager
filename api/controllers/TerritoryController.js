@@ -424,12 +424,12 @@ module.exports = {
         } 
         if(!err && t.length > 0) {
           if(request.wantsJSON) {
-            return response.json(anon_t);
+            return response.json(t);
           }
           return response.view({
             viewOptions : pageOptions,
             availableLetters : possibleLetters,
-            territories : anon_t
+            territories : t
           }); 
         } else {
           return response.send("Error: " + err, 500)
