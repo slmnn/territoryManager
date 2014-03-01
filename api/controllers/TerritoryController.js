@@ -43,7 +43,7 @@ var createNewTerritory = function(in_territory, callback) {
       else {
         Territory.create({
           territoryLetter : in_territory.letter,
-          territoryNumber : in_territory.number,
+          territoryNumber : parseInt(in_territory.number),
           territoryCode   : in_territory.letter + in_territory.number,
           taken : new Date(),
           reallyTaken : new Date(),
@@ -88,7 +88,7 @@ module.exports = {
   	createNewTerritory(
       { 
         letter : request.param('territoryLetter'), 
-        number : request.param('territoryNumber')
+        number : parseInt(request.param('territoryNumber'))
       },
       function(data, code) {
         return response.json(data, code);
@@ -156,7 +156,7 @@ module.exports = {
       pageOptions.breadcrumbs.push({name : searchParameters.territoryCode, link : null});
     }
   	else if (!request.params.letter && request.params.number) {
-  		searchParameters = {'territoryNumber' : request.params.number};
+  		searchParameters = {'territoryNumber' : parseInt(request.params.number)};
       pageOptions.breadcrumbs.push({name : searchParameters.territoryNumber, link : null});
     }
   	else if (request.params.letter && !request.params.number) {
