@@ -191,6 +191,7 @@ module.exports = {
     pageOptions.breadcrumbs = [{name : 'Territories', link : null}];
     pageOptions.currentUsername = request.user[0].username;
     pageOptions.defaultHolderName = sails.config.default_territory_holder;
+
     var filter = { };
     if(request.query.only_free == 'true') {
       filter.holder = sails.config.default_territory_holder_id;
@@ -204,6 +205,7 @@ module.exports = {
       oldDate.setTime(oldDate.getTime() - milliseconds_ago);
       filter.taken = { '<=' : oldDate };
     }
+
   	Territory.find(filter).sort('territoryLetter').sort('territoryNumber')
     .exec(function(err, all) {
       Holder.find().exec(function(err, h){
@@ -211,6 +213,17 @@ module.exports = {
   	  	if(request.wantsJSON) {
   	  		return response.json(all, 200);
   	  	} else {
+
+          var possibleLetters = figureOutPossibleLetters();
+          for(var i = 0; i < possibleLetters.length; i++) {
+            for(var j = 0; j < t_before_old_date.length; j++) {
+              if(possibleLetters[i] == t_before_old_date[j].territoryLetter) {
+                only_available_letters.push(possibleLetters[i]);
+                break;
+              }
+            }
+          }
+
           if(request.query.taken_days_ago) {
             var t_before_old_date = [];
             for(var i = 0; i < t_with_names.length; i++) {
@@ -219,15 +232,6 @@ module.exports = {
               }
             }
             var only_available_letters = [];
-            var possibleLetters = figureOutPossibleLetters();
-            for(var i = 0; i < possibleLetters.length; i++) {
-              for(var j = 0; j < t_before_old_date.length; j++) {
-                if(possibleLetters[i] == t_before_old_date[j].territoryLetter) {
-                  only_available_letters.push(possibleLetters[i]);
-                  break;
-                }
-              }
-            }
 
             return response.view({
               viewOptions: pageOptions,
@@ -236,16 +240,7 @@ module.exports = {
               territories : t_before_old_date
             });
           }
-          var possibleLetters = figureOutPossibleLetters();
-          var only_available_letters = [];
-          for(var i = 0; i < possibleLetters.length; i++) {
-            for(var j = 0; j < t_with_names.length; j++) {
-              if(possibleLetters[i] == t_with_names[j].territoryLetter) {
-                only_available_letters.push(possibleLetters[i]);
-                break;
-              }
-            }
-          }
+
   		  	return response.view({
             viewOptions: pageOptions,
             allLetters : possibleLetters,
@@ -299,7 +294,6 @@ module.exports = {
   holder : function(request, response) {
     pageOptions.defaultHolderName = sails.config.default_territory_holder;
     Holder.find().exec(function(err, all_holders) {
-      console.log(all_holders);
       if(request.method == 'GET') {
         pageOptions.breadcrumbs = [{name : 'Territories', link : '/territory'}, {name : 'Change Holder', link : null}];
         return response.view({
@@ -315,7 +309,6 @@ module.exports = {
           if(err)
             return response.json(err, 500);
           if(!t || t.length != 1) {
-            console.log(t, request.body.input_number, request.body.input_letter);
             return response.json("There is no suitable territory", 500);
           }
           t = t[0];

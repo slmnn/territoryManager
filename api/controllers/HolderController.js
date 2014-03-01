@@ -175,7 +175,6 @@ module.exports = {
   		Territory.find()
       .sort('territoryLetter').sort('territoryNumber')
   		.exec(function(err, t) {
-        console.log(h,t);
         var only_holders_with_territories = [];
         for(var i = 0; i < h.length; i++) {
           for(var j = 0; j < t.length; j++) {
