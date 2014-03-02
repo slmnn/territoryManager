@@ -1,6 +1,6 @@
 
 <div class="container">
-  <% _.each(territories, function (t) { %>
+  <% _.each(territories, function (t, t_index) { %>
   <table border="1px" class="s13">
     <th colspan="2" width="150px"><%= t.territoryCode %></th>
       <% var rowCount = 0 %>
@@ -33,11 +33,14 @@
           </tr>
         <% } %>
       <% } %>
-      <% do { %>
+      <% while(rowCount < 18) { %>
         <tr><td colspan="2">&emsp;</td></tr>
         <tr><td>&emsp;</td><td>&emsp;</td></tr>
         <% rowCount++ %>
-      <% } while(rowCount < 18) %>
+      <% } %>
   </table>
+  <% if (t_index % 4) { %> 
+    <span style="page-break-after:always;"></span>
+  <% } %>
   <% }) %>
 </div>
