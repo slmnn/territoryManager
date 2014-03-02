@@ -2,29 +2,35 @@
 <div class="container">
   <% _.each(territories, function (t) { %>
   <table border="1px" class="s13">
-    <tr><td><%= t.territoryCode %></td></tr>
-    <tr><td>
-      <table border="1px">
-        <% for(var i = 0; i < t.holderHistory.length; i++) { %>
-          <tr><td colspan="2"><%= t.holderHistory[i][0] %></td></tr>
+    <th><%= t.territoryCode %></th>
+      <% for(var i = 0; i < t.holderHistory.length; i++) { %>
+        <tr><td colspan="2"><%= t.holderHistory[i][0] %></td></tr>
+        <tr>
+          <td>
+            <% var d = new Date(t.holderHistory[i][1]) %>
+            <%= d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate() %>
+          </td>
+          <td>
+            <% if(i+1<t.holderHistory.length && t.holder != sails.config.default_territory_holder) { %>
+              <% var d = new Date(t.holderHistory[i+1][1]) %>
+              <%= d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate() %>
+            <% } else { %>
+              <% var d = new Date(t.taken) %>
+              <%= d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate() %>
+            <% } %>
+          </td>
+        </tr>
+        <% if(i == t.holderHistory.length - 1 && t.holder != sails.config.default_territory_holder) { %>
+          <tr><td colspan="2"><%= t.holder %></td></tr>
           <tr>
             <td>
-              <% var d = new Date(t.holderHistory[i][1]) %>
+              <% var d = new Date(t.taken) %>
               <%= d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate() %>
             </td>
-            <td>
-              <% if(i+1<t.holderHistory.length && t.holder != sails.config.default_territory_holder) { %>
-                <% var d = new Date(t.holderHistory[i+1][1]) %>
-                <%= d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate() %>
-              <% } else { %>
-                <% var d = new Date(t.taken) %>
-                <%= d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate() %>
-              <% } %>
-            </td>
+            <td></td>
           </tr>
         <% } %>
-      </table>
-    </td></tr>
+      <% } %>
   </table>
   <% }) %>
 </div>
