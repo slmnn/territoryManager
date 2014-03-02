@@ -1,7 +1,11 @@
 
 <div class="container">
   <% _.each(territories, function (t, t_index) { %>
-  <table border="1px" class="s13">
+  <% if (t_index % 4) { %> 
+    <table border="1px" class="s13" style="page-break-after : always;">
+  <% } else { %>
+    <table border="1px" class="s13">
+  <% } %>
     <th colspan="2" width="150px"><%= t.territoryCode %></th>
       <% var rowCount = 0 %>
       <% for(var i = 0; i < t.holderHistory.length; i++) { %>
@@ -39,8 +43,5 @@
         <% rowCount++ %>
       <% } %>
   </table>
-  <% if (t_index % 4) { %> 
-    <span style="page-break-after:always;"></span>
-  <% } %>
   <% }) %>
 </div>
