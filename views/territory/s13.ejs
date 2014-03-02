@@ -1,0 +1,18 @@
+<%- partial('../partials/header')%>
+
+<div class="container">
+  <% _.each(territories, function (t) { %>
+  <table>
+    <tr><td><%= t.territoryCode %></td></tr>
+    <tr><td>
+      <table>
+        <% _.each(t.holderHistory, function (h) { %>
+          <tr><td><%= h[0] %></td><td><% var d = new Date(h[1]) %><%= d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate() %></td></tr>
+        <% }) %>
+      </table>
+    </td></tr>
+  </table>
+  <% }) %>
+</div>
+
+<%- partial('../partials/footer') %>
