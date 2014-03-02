@@ -2,7 +2,7 @@
 <div class="container">
   <% _.each(territories, function (t) { %>
   <table border="1px" class="s13">
-    <th colspan="2"><%= t.territoryCode %></th>
+    <th colspan="2" width="150px"><%= t.territoryCode %></th>
       <% var rowCount = 0 %>
       <% for(var i = 0; i < t.holderHistory.length; i++) { %>
         <% rowCount++ %>

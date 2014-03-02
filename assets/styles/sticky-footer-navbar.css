@@ -73,6 +73,9 @@ code {
   border: 1px solid black; 
   float:left; 
   min-height:500px; 
+  width: 150px;
+  overflow: hidden;
+  white-space:nowrap;
   display: inline-block;
   text-align: center;
 }
