@@ -30,7 +30,7 @@
             <% _.each(territories, function (t) { %>
             <% if(letter == t.territoryLetter) { %>
 
-            <% var taken = new Date(t.taken); taken = taken.getTime(); var not_covered = taken - (1000 * 60 * 60 * 24 * sails.config.limit_for_rarely_covered_territory); %>
+            <% var taken = new Date(t.taken); taken = taken.getTime(); var now = new Date(); var not_covered = now.getTime() - (1000 * 60 * 60 * 24 * sails.config.limit_for_rarely_covered_territory); %>
             <li>
               <a href="<%= '/territory/' + t.territoryLetter + '/' + t.territoryNumber %>">
                 <% if(not_covered > taken) { %> 
