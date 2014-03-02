@@ -398,7 +398,7 @@ module.exports = {
   s13 : function(request, response) {
     pageOptions.defaultHolderName = sails.config.default_territory_holder;
     var possibleLetters = figureOutPossibleLetters();
-    Territory.find()
+    Territory.find().sort('territoryLetter').sort('territoryNumber')
     .exec(function(err, t) {
       Holder.find()
       .exec(function(err, h) {

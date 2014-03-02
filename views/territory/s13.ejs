@@ -2,8 +2,10 @@
 <div class="container">
   <% _.each(territories, function (t) { %>
   <table border="1px" class="s13">
-    <th><%= t.territoryCode %></th>
+    <th colspan="2"><%= t.territoryCode %></th>
+      <% var rowCount = 0 %>
       <% for(var i = 0; i < t.holderHistory.length; i++) { %>
+        <% rowCount++ %>
         <tr><td colspan="2"><%= t.holderHistory[i][0] %></td></tr>
         <tr>
           <td>
@@ -31,6 +33,11 @@
           </tr>
         <% } %>
       <% } %>
+      <% do { %>
+        <tr><td colspan="2">&emsp;</td></tr>
+        <tr><td>&emsp;</td><td>&emsp;</td></tr>
+        <% rowCount++ %>
+      <% } while(rowCount < 18) %>
   </table>
   <% }) %>
 </div>

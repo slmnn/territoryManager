@@ -69,4 +69,10 @@ code {
     margin: 0;
 }
 
-.s13 { border: 1px solid black; float:left; width:148px; display: inline-block;}
+.s13 { 
+  border: 1px solid black; 
+  float:left; 
+  min-height:500px; 
+  display: inline-block;
+  text-align: center;
+}
