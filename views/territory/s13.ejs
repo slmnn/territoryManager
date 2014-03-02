@@ -27,6 +27,7 @@
           </td>
         </tr>
         <% if(i == t.holderHistory.length - 1 && t.holder != sails.config.default_territory_holder) { %>
+          <% rowCount++ %>
           <tr><td colspan="2"><%= t.holder %></td></tr>
           <tr>
             <td>
