@@ -30,8 +30,22 @@
             <% _.each(territories, function (t) { %>
             <% if(letter == t.territoryLetter) { %>
 
-          
-            <li><a href="<%= '/territory/' + t.territoryLetter + '/' + t.territoryNumber %>"><%= t.territoryCode %></a></li>
+            <% var taken = new Date(t.taken); taken = taken.getTime(); var not_covered = taken - (1000 * 60 * 60 * 24 * sails.config.limit_for_rarely_covered_territory); %>
+            <li>
+              <a href="<%= '/territory/' + t.territoryLetter + '/' + t.territoryNumber %>">
+                <% if(not_covered > taken) { %> 
+                  <span style="color:#FF3300">
+                <% } %>
+                <% if(t.holder == sails.config.default_territory_holder) { %>
+                  <b><%= t.territoryCode %></b>
+                <% } else %>
+                  <%= t.territoryCode %>
+                <% } %>
+                <% if(not_covered > taken) { %> 
+                  </span>
+                <% } %>
+              </a>
+            </li>
             
             <!--
             <li><%= i18n('Holder') %>: <%= t.holder %></li>
