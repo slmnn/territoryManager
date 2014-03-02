@@ -38,7 +38,7 @@
                 <% } %>
                 <% if(t.holder == sails.config.default_territory_holder) { %>
                   <b><%= t.territoryCode %></b>
-                <% } else %>
+                <% } else { %>
                   <%= t.territoryCode %>
                 <% } %>
                 <% if(not_covered > taken) { %> 
