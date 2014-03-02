@@ -6,6 +6,6 @@ module.exports = {
   default_territory_holder_id : '5310a361156abf701b063329',
   admin_init_password : '2348jhj3hh',
 
-  limit_for_rarely_covered_territory : 30, // days
+  limit_for_rarely_covered_territory : process.env.LIMIT_RARELY_COVERED, // days
   territory_letters : ['A','K','L','M']
 };

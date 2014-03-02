@@ -1,10 +1,11 @@
 
 <div class="container">
+  <% var div_open = true %>
   <% _.each(territories, function (t, t_index) { %>
-    <% if (t_index == 0) { var div_open = true; %>
+    <% if (t_index == 0) { div_open = true; %>
       <div style="page-break-after : always; page-break-inside: avoid;">
     <% } %>
-    <% if (t_index != 0 && !(t_index % 4)) { var div_open = true; %>
+    <% if (t_index != 0 && !(t_index % 4)) { div_open = true; %>
       </div>
       <div style="page-break-after : always; page-break-inside: avoid;">
     <% } %>
@@ -47,7 +48,7 @@
           <% rowCount++ %>
         <% } %>
     </table>
-    <% if (t_index != 0 && !(t_index % 4)) { var div_open = false; %> 
+    <% if (t_index != 0 && !(t_index % 4)) { div_open = false; %> 
       </div>
     <% }  %>
   <% }) %>
