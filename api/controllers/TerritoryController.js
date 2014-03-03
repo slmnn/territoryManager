@@ -424,6 +424,7 @@ module.exports = {
                 if(h[j].id == t_with_holder_names[i].holderHistory[k][0]) {
                   t_with_holder_names[i].holderHistory[k][0] = h[j].name;
                   t_with_holder_names[i].holderHistoryWithNames.push([h[j].name, t_with_holder_names[i].holderHistory[k][1]]);
+                  break;
                 } else if( j == h.length - 1) {
                   t_with_holder_names[i].holderHistory[k][0] = 'Removed holder';
                   t_with_holder_names[i].holderHistoryWithNames.push(['Removed holder', t_with_holder_names[i].holderHistory[k][1]]);
@@ -463,8 +464,15 @@ module.exports = {
       var now = new Date();
       var not_covered_limit = now.getTime() - 1000 * 60 * 60 * 24 * sails.config.limit_for_rarely_covered_territory;
       for(var i = 0; i < t.length; i++) {
-        var covered = new Date(t[i].taken);
-        average_covered_time += ( now.getTime() - covered.getTime() );
+        var covered;
+        if (t[i].holderHistory && t[i].holderHistory.length > 1 ) {
+          last_covered = new Date(t[i].holderHistory[t[i].holderHistory.length - 2][1]);
+          covered = new Date(t[i].holderHistory[t[i].holderHistory.length - 1][1]);
+          average_covered_time += ( covered.getTime() - last_covered.getTime() );
+        } else if(t[i].holder != sails.config.default_territory_holder_id) {
+          covered = new Date(t[i].taken);
+          average_covered_time += ( now.getTime() - covered.getTime() );
+        } 
         if(covered < not_covered_limit) {
           not_covered_count++;
         }
