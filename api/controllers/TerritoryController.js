@@ -25,7 +25,7 @@ var formDaysMonthsYearsObject = function(in_millisecs) {
   var millisecondsPerDay = 1000 * 60 * 60 * 24;
     var days = in_millisecs / millisecondsPerDay;
     var months = days / 30;
-    var years = months / 30;
+    var years = months / 12;
     days = days % 30;
     months = months % 12;
     return {'days':Math.floor(days), 'months':Math.floor(months), 'years': Math.floor(years)};
@@ -477,14 +477,30 @@ module.exports = {
       }
       average_covered_time = average_covered_time / t.length;
       average_holding_time = average_holding_time / ( t.length - available_count );
-      return response.view({
-        viewOptions : pageOptions,
-        average_covered : formDaysMonthsYearsObject(average_covered_time),
-        average_holding : formDaysMonthsYearsObject(average_holding_time),
-        count : total_count,
-        available_count : available_count,
-        not_covered_count : not_covered_count
-      })
+
+      Stats.create({
+        statistic_date : new Date(),
+        average_covered_time : average_covered_time,
+        average_holding_time : average_holding_time,
+        total_count : total_count,
+        not_covered_count : not_covered_count,
+        available_count : available_count
+      }).done(function(err, s) {
+        Stats.find().exec(function(err, all_stats) {
+          if(request.wantsJSON) {
+            return response.json(all_stats);
+          }
+          return response.view({
+            viewOptions : pageOptions,
+            all_stats : all_stats,
+            average_covered : formDaysMonthsYearsObject(average_covered_time),
+            average_holding : formDaysMonthsYearsObject(average_holding_time),
+            count : total_count,
+            available_count : available_count,
+            not_covered_count : not_covered_count
+          });
+        });
+      });
     });
   },
 
