@@ -21,6 +21,16 @@ var pageOptions = {
   appliedFilters : []
 };
 
+var formDaysMonthsYearsObject = function(in_millisecs) {
+  var millisecondsPerDay = 1000 * 60 * 60 * 24;
+    var days = in_millisecs / millisecondsPerDay;
+    var months = days / 30;
+    var years = months / 30;
+    days = days % 30;
+    months = months % 12;
+    return {'days':Math.floor(days), 'months':Math.floor(months), 'years': Math.floor(years)};
+}
+
 var figureOutPossibleLetters = function() {
   return sails.config.territory_letters;
 };
@@ -438,6 +448,43 @@ module.exports = {
         }        
       })
 
+    });
+  },
+
+  stats : function(request, response) {
+    pageOptions.defaultHolderName = sails.config.default_territory_holder;
+    pageOptions.breadcrumbs = [{name : 'Territories', link : '/territory'}, {name : 'Stats', link : null}];
+    Territory.find().exec(function(err, t) {
+      var average_covered_time = 0;
+      var average_holding_time = 0;
+      var total_count = t.length;
+      var available_count = 0;
+      var not_covered_count = 0;
+      var now = new Date();
+      var not_covered_limit = now.getTime() - 1000 * 60 * 60 * 24 * sails.config.limit_for_rarely_covered_territory;
+      for(var i = 0; i < t.length; i++) {
+        var covered = new Date(t[i].taken);
+        average_covered_time += ( now.getTime() - covered.getTime() );
+        if(covered < not_covered_limit) {
+          not_covered_count++;
+        }
+        if(t[i].holder != sails.config.default_territory_holder_id) {
+          var holding = new Date(t[i].reallyTaken);
+          average_holding_time += ( now.getTime() - holding.getTime() );
+        } else {
+          available_count++;
+        }
+      }
+      average_covered_time = average_covered_time / t.length;
+      average_holding_time = average_holding_time / ( t.length - available_count );
+      return response.view({
+        viewOptions : pageOptions,
+        average_covered : formDaysMonthsYearsObject(average_covered_time),
+        average_holding : formDaysMonthsYearsObject(average_holding_time),
+        count : total_count,
+        available_count : available_count,
+        not_covered_count : not_covered_count
+      })
     });
   },
 

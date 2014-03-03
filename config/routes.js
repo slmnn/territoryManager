@@ -46,6 +46,7 @@ module.exports.routes = {
 
   'get /holder/name/:name' : 'HolderContoller.findName',
   'get /territory/s13' : 'TerritoryController.s13',
+  'get /territory/stats' : 'TerritoryController.stats',
   'get /territory/destroy' : 'TerritoryController.destroy',
   'post /territory/destroy' : 'TerritoryController.destroy',
   'get /territory/actions/add' : 'TerritoryController.add',

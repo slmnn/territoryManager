@@ -1,0 +1,27 @@
+
+<%- partial('../partials/header')%>
+
+<div class="container">
+	<dl class="dl-horizontal">
+		<dt><%= i18n("Total count") %></dt>
+		<dd><%= count %></dd>
+		<dt><%= i18n("Not covered recently") %></dt>
+		<dd><%= not_covered_count %> (<%= i18n("Not covered in the last ") %><%= sails.config.limit_for_rarely_covered_territory %> <%= i18n("days") %>.)</dd>
+		<dt><%= i18n("Available") %></dt>
+		<dd><%= available_count %></dd>
+		<dt><%= i18n("Average covered time") %></dt>
+		<dd>
+			<%= average_covered.days %><%= i18n(' days') %>
+			<%= average_covered.months %><%= i18n(" months and ") %>
+			<%= average_covered.years %><%= i18n(" years.") %>
+		</dd>
+		<dt><%= i18n("Average holding time") %></dt>
+		<dd>
+			<%= average_holding.days %><%= i18n(" days") %>
+			<%= average_holding.months %><%= i18n(" months and ") %>
+			<%= average_holding.years %><%= i18n(" years.") %>
+		</dd>
+	</dl>
+</div>
+
+<%- partial('../partials/footer') %>
