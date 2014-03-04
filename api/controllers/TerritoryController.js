@@ -352,15 +352,21 @@ module.exports = {
             .exec(function(err, h) {
               if(err)
                 return response.json(err, 500);
-              if(!h)
+              if(!h) {
                 return response.json("Holder " + request.body.input_holder +  " is not in the system. Add her first.", 500);
+              }
               if(t.holder != h.id) {
                 t.reallyTaken = new Date();
               }
-              if(!t.holderHistory)
-                  t.holderHistory = [];
-              if(t.holder != sails.config.default_territory_holder_id)
-                t.holderHistory.push([t.holder, new Date()]);
+              if(!t.holderHistory) {
+                t.holderHistory = [];
+              }
+              var now = new Date();
+              t.holderHistory.push([t.holder, now]);
+              if(t.holder != sails.config.default_territory_holder_id) {
+                var taken = new Date(t.taken);
+                t.lastCoveredTime = now.getTime() - taken.getTime();
+              }
               t.holder = h.id;
               t.taken = new Date();
               t.save(function(err) {
@@ -422,18 +428,20 @@ module.exports = {
             for(var k = 0; k < t_with_holder_names[i].holderHistory.length; k++) {
               for(var j = 0; j < h.length; j++) {
                 if(h[j].id == t_with_holder_names[i].holderHistory[k][0]) {
-                  t_with_holder_names[i].holderHistory[k][0] = h[j].name;
+                  // t_with_holder_names[i].holderHistory[k][0] = h[j].name;
                   t_with_holder_names[i].holderHistoryWithNames.push([h[j].name, t_with_holder_names[i].holderHistory[k][1]]);
                   break;
                 } else if( j == h.length - 1) {
-                  t_with_holder_names[i].holderHistory[k][0] = 'Removed holder';
+                  // t_with_holder_names[i].holderHistory[k][0] = 'Removed holder';
                   t_with_holder_names[i].holderHistoryWithNames.push(['Removed holder', t_with_holder_names[i].holderHistory[k][1]]);
                 }
               }
             }
           } else {
             t_with_holder_names[i].holderHistory = [];
+            t_with_holder_names[i].holderHistoryWithNames = [];
           }
+          if(t_with_holder_names[i].territoryCode == 'A7') console.log(t_with_holder_names[i],t_with_holder_names[i].holderHistoryWithNames);
         } 
         if(!err && t_with_holder_names.length > 0) {
           if(request.wantsJSON) {
@@ -461,17 +469,14 @@ module.exports = {
       var total_count = t.length;
       var available_count = 0;
       var not_covered_count = 0;
+      var covered_sometime_count = 0;
       var now = new Date();
       var not_covered_limit = now.getTime() - 1000 * 60 * 60 * 24 * sails.config.limit_for_rarely_covered_territory;
       for(var i = 0; i < t.length; i++) {
         var covered;
-        if (t[i].holderHistory && t[i].holderHistory.length > 1 ) {
-          last_covered = new Date(t[i].holderHistory[t[i].holderHistory.length - 2][1]);
-          covered = new Date(t[i].holderHistory[t[i].holderHistory.length - 1][1]);
-          average_covered_time += ( covered.getTime() - last_covered.getTime() );
-        } else if(t[i].holder != sails.config.default_territory_holder_id) {
-          covered = new Date(t[i].taken);
-          average_covered_time += ( now.getTime() - covered.getTime() );
+        if (typeof t[i].lastCoveredTime != 'undefined' ) {
+          average_covered_time += t[i].lastCoveredTime;
+          covered_sometime_count++;
         } 
         if(covered < not_covered_limit) {
           not_covered_count++;
@@ -483,8 +488,10 @@ module.exports = {
           available_count++;
         }
       }
-      average_covered_time = average_covered_time / t.length;
-      average_holding_time = average_holding_time / ( t.length - available_count );
+      if(covered_sometime_count != 0)
+        average_covered_time = average_covered_time / covered_sometime_count;
+      if((t.length - available_count) != 0)
+        average_holding_time = average_holding_time / ( t.length - available_count );
 
       Stats.create({
         statistic_date : new Date(),

@@ -94,9 +94,9 @@
           <% if(t.holderHistory && t.holderHistory.length > 0) { %>
           <dt><%= i18n('History') %></dt>
           <dd>
-              <% _.each(t.holderHistory, function (item) { %>
-                <a href="/holder/<%= item[0] %>"><% var taken = new Date(item[1]); %> <%= taken.getFullYear() + '-' + (taken.getMonth()+1) + '-' + taken.getDate() %></a> 
-              <% }) %>
+              <% _.each(t.holderHistory, function (item) { if(item[0] != sails.config.default_territory_holder_id) { %>
+                <a href="/holder/<%= item[0] %>"><% var taken = new Date(item[1]); %> <%= taken.getFullYear() + '-' + (taken.getMonth()+1) + '-' + taken.getDate() %></a> / 
+              <% }}) %>
           </dd>
           <% } %>
         </dl>

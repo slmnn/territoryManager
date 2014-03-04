@@ -8,35 +8,33 @@
     <table border="1px" class="s13">
       <th colspan="2" width="150px"><%= t.territoryCode %></th>
         <% var rowCount = 0 %>
-        <% for(var i = 0; i < t.holderHistory.length; i++) { %>
-          <% rowCount++ %>
-          <tr><td colspan="2"><%= i18n(t.holderHistory[i][0]) %></td></tr>
-          <tr>
+        <% for(var i = 0; i < t.holderHistoryWithNames.length; i++) { %>
+          <% if(t.holderHistoryWithNames[i][0] == sails.config.default_territory_holder) { continue; } %>
+          <% if(i>0) { %>
+            <% rowCount++; %>
+            <tr><td colspan="2"><%= i18n(t.holderHistoryWithNames[i][0]) %></td></tr>
             <td>
-              <% var d = new Date(t.holderHistory[i][1]) %>
+              <% var d = new Date(t.holderHistoryWithNames[i-1][1]) %>
               <%= d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate() %>
             </td>
             <td>
-              <% if(i+1<t.holderHistory.length && t.holder != sails.config.default_territory_holder) { %>
-                <% var d = new Date(t.holderHistory[i+1][1]) %>
-                <%= d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate() %>
-              <% } else { %>
-                <% var d = new Date(t.taken) %>
-                <%= d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate() %>
-              <% } %>
+              <% var d = new Date(t.holderHistoryWithNames[i][1]) %>
+              <%= d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate() %>
+            </td>
+          <% } %>
+        <% } %>
+        <% if(t.holder != sails.config.default_territory_holder) { %>
+          <% rowCount++ %>
+          <tr><td colspan="2"><%= i18n(t.holder) %></td></tr>
+          <tr>
+            <td>
+              <% var d = new Date(t.taken) %>
+              <%= d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate() %>
+            </td>
+            <td>
+              &emsp;&emsp;&emsp;&emsp;
             </td>
           </tr>
-          <% if(i == t.holderHistory.length - 1 && t.holder != sails.config.default_territory_holder) { %>
-            <% rowCount++ %>
-            <tr><td colspan="2"><%= i18n(t.holder) %></td></tr>
-            <tr>
-              <td>
-                <% var d = new Date(t.taken) %>
-                <%= d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate() %>
-              </td>
-              <td></td>
-            </tr>
-          <% } %>
         <% } %>
         <% while(rowCount < 20) { %>
           <tr><td colspan="2">&emsp;</td></tr>

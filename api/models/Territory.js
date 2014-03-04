@@ -26,6 +26,9 @@ module.exports = {
   		type : "STRING"
   	},
 
+    /* How long it took to cover the territory */
+    lastCoveredTime : "INTEGER",
+
   	/* When the territory is "taken" to a person or admin */
     taken : "DATE",
 
