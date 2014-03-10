@@ -27,6 +27,9 @@ module.exports = {
       required: true
     },
 
+    /* admin, regular, restricted */
+    type : 'string',
+
     //Override toJSON method to remove password from API
     toJSON: function() {
       var obj = this.toObject();

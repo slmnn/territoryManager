@@ -31,6 +31,18 @@
 			</div>
 
 			<div class="control-group">
+			  <label class="control-label" for="input_password2"><%= i18n('Account type') %> (<%= i18n('required') %>)</label>
+			  <div class="controls">
+			    <input type="radio" name="input_type" value="regular">
+			    	<%= i18n('regular') %>
+			  	</input>
+			    <input type="radio" name="input_type" value="restricted">
+			    	<%= i18n('restricted') %>
+			  	</input>
+			  </div>
+			</div>
+
+			<div class="control-group">
 			  <div class="controls">
 			    <button id="input_submit" name="input_submit" class="btn btn-primary">Create new user account</button>
 			  </div>

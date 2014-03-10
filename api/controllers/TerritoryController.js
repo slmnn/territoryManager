@@ -187,6 +187,7 @@ module.exports = {
         Holder.find().exec(function(err, h) {
           var t_with_names = convertHolderIDtoName(t, h);
           pageOptions.currentUsername = request.user[0].username;
+          pageOptions.currentUserType = request.user[0].type;
           return response.view({
             viewOptions: pageOptions,
             possibleHolders : h,
@@ -200,6 +201,7 @@ module.exports = {
   index : function(request, response) {
     pageOptions.breadcrumbs = [{name : 'Territories', link : null}];
     pageOptions.currentUsername = request.user[0].username;
+    pageOptions.currentUserType = request.user[0].type;
     pageOptions.defaultHolderName = sails.config.default_territory_holder;
 
     var filter = { };

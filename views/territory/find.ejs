@@ -31,7 +31,11 @@
     <% _.each(territories, function (t) { %>
     <div class="panel panel-info">
       <div class="panel-heading">
-        <h3 class="panel-title"><a href="/territory/<%= t.territoryLetter %>/<%= t.territoryNumber %>"><%= t.territoryCode %></a><a class="pull-right" href="/territory/actions/update/<%= t.territoryCode %>"><%= i18n('Edit') %></a></h3>
+        <h3 class="panel-title"><a href="/territory/<%= t.territoryLetter %>/<%= t.territoryNumber %>"><%= t.territoryCode %></a>
+          <% if(viewOptions.currentUserType && viewOptions.currentUserType != 'restricted') { %>
+            <a class="pull-right" href="/territory/actions/update/<%= t.territoryCode %>"><%= i18n('Edit') %></a>
+          <% } %>
+        </h3>
 
       </div>
       <div class="panel-body">

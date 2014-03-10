@@ -37,8 +37,9 @@ module.exports = {
 					console.log("Creating 'admin'");
 					User.create(
 						{
-							username: 'admin',
-							password: sails.config.admin_init_password
+							username : 'admin',
+							password : sails.config.admin_init_password,
+							type : 'admin'
 						}
 					).done(function(err, u){
 						if(err) return res.send(err, 500);
@@ -88,6 +89,12 @@ module.exports = {
 					actionResult : "Username can not be 'admin'"
 				});
 			}
+			if(req.body.input_type != "regular" && req.body.input_type != "restricted") {
+				return res.view({
+					viewOptions: pageOptions,
+					actionResult : "Account type is not valid."
+				});
+			}
 			User.find({username : req.body.input_username}).exec(function(err, u) {
 				if(err) return res.send(err, 500);
 				if(u && u.length > 0) {
@@ -99,7 +106,8 @@ module.exports = {
 				User.create(
 					{
 						username:req.body.input_username,
-						password:req.body.input_password1
+						password:req.body.input_password1,
+						type:req.body.input_type
 					}
 				).done(function(err, u){
 					return res.view({
