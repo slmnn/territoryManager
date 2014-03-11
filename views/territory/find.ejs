@@ -28,6 +28,7 @@
     <h2><%= i18n('Territory') %></h2>
   </div>
 -->
+    <% var now = new Date(); var not_returned = now.getTime() - (1000 * 60 * 60 * 24 * sails.config.limit_for_rarely_covered_territory * 2); var not_covered = now.getTime() - (1000 * 60 * 60 * 24 * sails.config.limit_for_rarely_covered_territory); %>
     <% _.each(territories, function (t) { %>
     <div class="panel panel-info">
       <div class="panel-heading">
@@ -41,16 +42,36 @@
       <div class="panel-body">
         <dl class="dl-horizontal">
           <dt><%= i18n('Holder') %></dt><dd><%= t.holder %></dd>
-          <dt><%= i18n('Covered') %></dt><dd><% var taken = new Date(t.taken); %> <%= taken.getFullYear() + '-' + (taken.getMonth()+1) + '-' + taken.getDate() %></dd>
+          <dt><%= i18n('Covered') %></dt>
+          <dd>
+            <% var taken = new Date(t.taken); %> 
+            <% if(taken < not_covered) { %>
+              <span style="color:#FF3300; font-weight:bold">
+                <%= taken.getFullYear() + '-' + (taken.getMonth()+1) + '-' + taken.getDate() %>
+              </span>
+            <% } else { %>
+              <%= taken.getFullYear() + '-' + (taken.getMonth()+1) + '-' + taken.getDate() %>
+            <% } %>
+          </dd>
           <% if(t.holder != viewOptions.defaultHolderName) { %>
-          <dt><%= i18n('This holder since') %></dt>
-          <dd><% var taken = new Date(t.reallyTaken); %> <%= taken.getFullYear() + '-' + (taken.getMonth()+1) + '-' + taken.getDate() %> (<%= i18n('Taken ') %><%= daysBetween(new Date(t.reallyTaken), new Date()) %>)</dd>
+            <dt><%= i18n('This holder since') %></dt>
+            <dd>
+              <% var taken = new Date(t.reallyTaken); %> <%= taken.getFullYear() + '-' + (taken.getMonth()+1) + '-' + taken.getDate() %>
+              <% if(taken.getTime() < not_returned) { %>
+                (<span style="color:#FF3300; font-weight:bold">
+                  <%= i18n('Taken ') %><%= daysBetween(new Date(t.reallyTaken), new Date()) %>
+                </span>)
+              <% } else { %>
+                (<%= i18n('Taken ') %><%= daysBetween(new Date(t.reallyTaken), new Date()) %>)
+              <% } %>
+            </dd>
           <% } %>
           <dt><%= i18n('Description') %></dt><dd><pre><%= t.description %></pre></dd>
           <dt><%= i18n('Map') %></dt>
           <dd>
-          <% var c = t.lat + ',' + t.lng %>
-          <img height="200px" src="http://maps.googleapis.com/maps/api/staticmap?center=<%= c %>&zoom=15&size=400x200&maptype=roadmap&markers=color:red%7C<%= c %>&sensor=false" alt="map" />
+            <% var c = t.lat + ',' + t.lng %>
+            <img height="200px" src="http://maps.googleapis.com/maps/api/staticmap?center=<%= c %>&zoom=15&size=400x200&maptype=roadmap&markers=color:red%7C<%= c %>&sensor=false" alt="map" />
+            <br/><a href="http://maps.google.com/?q=<%= c %>" target="blank_"><%= i18n('Show on a larger map') %></a>
           <br/>
           <br/>
           </dd>
@@ -81,6 +102,11 @@
               <button id="input_submit" type="submit" class="btn btn-default">
                 <%= i18n('Assign to the same holder again (mark as covered)') %>
               </button>
+              <% if(taken.getTime() < not_returned) { %>
+                <p class="text-error">
+                  <%= i18n('Please notice: the same owner has had this territory for a long time.') %>
+                </p>
+              <% } %>
             </form>
           </dd>
           <dt><%= i18n('Return') %></dt>
