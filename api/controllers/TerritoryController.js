@@ -447,6 +447,7 @@ module.exports = {
             callback();
           })
         }, function(result) {
+          console.log("trying to send mails", mails)
           async.each(mails, function(mail, callback) {
             smtpTransport.sendMail(mail, function(error, response){
               if(error){
