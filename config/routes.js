@@ -49,6 +49,7 @@ module.exports.routes = {
   'get /territory/stats' : 'TerritoryController.stats',
   'get /territory/destroy' : 'TerritoryController.destroy',
   'post /territory/destroy' : 'TerritoryController.destroy',
+  'get /territory/actions/sendemails' : 'TerritoryController.sendNotificationEmails',
   'get /territory/actions/add' : 'TerritoryController.add',
   'post /territory/actions/add' : 'TerritoryController.add',
   'get /territory/actions/update/:id' : 'TerritoryController.update',

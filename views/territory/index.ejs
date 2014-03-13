@@ -60,7 +60,8 @@
 </div>
 
 <div class="container">
-  <p class="bg-success"><%= i18n('Showing') %> <%= territories.length %> <%= i18n('territories') %>. <%= i18n('Total count') %>: <%= totalCount %>.</p>
+  <p class="bg-success"><%= i18n('Showing') %> <span class="badge badge-info"><%= territories.length %></span> <%= i18n('territories') %>. <%= i18n('Total count') %>: <span class="badge badge-info"><%= totalCount %></span>.</p>
+  <p class="bg-success"><%= i18n('Email notifications for just taken territories') %>: <span class="badge badge-info"><%= territoryTakenNotificationCount %></span>. <%= i18n('Email notifications for not covered territories') %>: <span class="badge badge-info"><%= territoryNotCoveredNotificationCount %></span>. <a href="territory/actions/sendemails"><%= i18n('Send notifications now') %></a></p>
 </div>
 
 <div class="container">

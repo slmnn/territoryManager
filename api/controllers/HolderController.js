@@ -35,7 +35,7 @@ var convertHolderIDtoName = function(t, h) {
   return t;
 };
 
-var createNewHolder = function(in_name, in_email, callback) {
+var createNewHolder = function(in_name, in_email, in_emailValid, callback) {
   if(!in_name) {
   	var d = new Date();
     in_name = anynomousHolderPrefix + d.getTime();
@@ -51,9 +51,11 @@ var createNewHolder = function(in_name, in_email, callback) {
         var suggestion = in_name + '_' + t.length;
         callback("The name is not unique. Try '" + suggestion + "'", 500);
       } else {
+        console.log(in_emailValid);
         Holder.create({
           name : in_name,
           email : in_email,
+          emailValid : in_emailValid == "email_is_not_valid" ? false : true,
           territories : []
         }).done(function(err, holder) {
           if(err) {
@@ -85,6 +87,7 @@ module.exports = {
     	createNewHolder(
     		request.body.input_name, 
     		request.body.input_email,
+        request.body.input_email_valid,
         function(data, code) {
           if(code != 200) {
             return response.view({

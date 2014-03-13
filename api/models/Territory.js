@@ -29,6 +29,9 @@ module.exports = {
     /* How long it took to cover the territory */
     lastCoveredTime : "INTEGER",
 
+    /* When was the last notification email sent */
+    notificationEmailDate : "DATE",
+
   	/* When the territory is "taken" to a person or admin */
     taken : "DATE",
 

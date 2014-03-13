@@ -20,6 +20,11 @@ module.exports = {
   		type : "email",
   		required : true
   	},
+
+    emailValid : {
+      type : "boolean",
+      required : true
+    }
   	
   }
 

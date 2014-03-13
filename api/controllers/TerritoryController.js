@@ -15,6 +15,9 @@
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
 
+var nodemailer = require("nodemailer");
+var async = require("async");
+
 var pageOptions = {
   activePage : 'territory',
   breadcrumbs : [],
@@ -87,8 +90,105 @@ var convertHolderIDtoName = function(t, h) {
   return t;
 };
 
+var sendTerritoryToHolderEmail = function(territoryCode, holder_email, callback) {
+  // create reusable transport method (opens pool of SMTP connections)
+  var smtpTransport = nodemailer.createTransport("SMTP",{
+      service: "Gmail",
+      auth: {
+          user: sails.config.smtp_username,
+          pass: sails.config.smtp_password
+      }
+  });
+
+  // setup e-mail data with unicode symbols
+  var mailOptions = {
+      from: "Fred Foo <foo@blurdybloop.com>", // sender address
+      to: holder_email, // list of receivers
+      subject: "Hello " + territoryCode, // Subject line
+      text: "Hello world " + territoryCode, // plaintext body
+      html: "<b>Hello world ✔</b>" // html body
+  }
+
+  // send mail with defined transport object
+  smtpTransport.sendMail(mailOptions, function(error, response){
+        if(error){
+            console.log(error);
+        }else{
+            console.log("Message sent: " + response.message);
+        }
+
+        // if you don't want to use this transport object anymore, uncomment following line
+        smtpTransport.close(); // shut down the connection pool, no more messages
+
+        callback();
+    }
+  );
+};
+
+var createEmailMessage = function(in_template, in_holder, in_territory, in_listOfTerritories) {
+  var subjectTxt = in_template.title.replace("_holderName", in_holder.name);
+  subjectTxt = subjectTxt.replace("_territoryCode", in_territory.territoryCode);
+  var bodyHTML = in_template.body.replace("_territoryCode", in_territory.territoryCode);
+  bodyHTML = bodyHTML.replace("_territoryLat", in_territory.lat);
+  bodyHTML = bodyHTML.replace("_territoryLng", in_territory.lng);
+  var taken = new Date(in_territory.taken);
+  bodyHTML = bodyHTML.replace("_taken", taken.getFullYear() + "-" + (taken.getMonth()+1) + "-" + taken.getDate());
+  bodyHTML = bodyHTML.replace("_holderName", in_holder.name);
+  bodyHTML = bodyHTML.replace("_territoryDetails", in_territory.description);
+  bodyHTML = bodyHTML.replace("_listAllTerritoryCodes", in_listOfTerritories);
+  var mailOptions = {
+    from: sails.config.notificationEmail_sender_address, // sender address
+    to: in_holder.email, // list of receivers
+    subject: subjectTxt, // Subject line
+    text: "This message is available only in HTML.", // plaintext body
+    html: bodyHTML // html body
+  }
+  return mailOptions;
+};
+
+var createEmailObject = function(t, t_all, h_all, template) {
+  var current_holder = undefined;
+  for(var j = 0; j < h_all.length; j++) {
+    if(h_all[j].id == t.holder && h_all[j].emailValid === true) {
+      current_holder = h_all[j];
+    }
+  }
+  if(typeof current_holder != "undefined") {
+    var list_of_territories = [];
+    for(var k = 0; k < t_all.length; k++) {
+      if(t_all[k].holder == current_holder.id) {
+        list_of_territories.push(t_all[k].territoryCode);
+      }
+    }
+    var mail = createEmailMessage(
+      template, 
+      current_holder, 
+      t,
+      list_of_territories.toString()
+    );
+    return mail;
+  }
+  return undefined;
+};
+
+var sendMails = function(smtpTransport, mails, callback) {
+  if(mails.length == 0) { 
+    callback(); 
+    return;
+  }
+  smtpTransport.sendMail(mails.pop(), function(error, response){
+      if(error){
+        console.log(error);
+      }else{
+        console.log("Message sent: " + response.message);
+      }
+      sendMails(smtpTransport, mails, callback)
+    }
+  );
+}
+
 module.exports = {
-    
+
   create : function(request, response) {
   	if(request.method != 'POST')
   		return response.notFound();
@@ -248,18 +348,121 @@ module.exports = {
             out_t = t_with_names;
           }
 
-          Territory.count(function(err, count_all) {
-            return response.view({
-              viewOptions: pageOptions,
-              allLetters : possibleLetters,
-              availableLetters : only_available_letters,
-              totalCount : count_all,
-              territories : out_t
+          Territory.find().exec(function(err, t_all) {
+            var new_territory_taken_emails = 0;
+            var not_covered_territory_emails = 0;
+            var now = new Date();
+            now = now.getTime();
+            var not_covered_limit = now - (1000*60*60*24*sails.config.limit_for_rarely_covered_territory);
+            for(var i = 0; i < t_all.length; i++) {
+              if(t_all[i].notificationEmailDate && t_all[i].holder != sails.config.default_territory_holder_id) {
+                var reallyTaken = new Date(t_all[i].reallyTaken);
+                reallyTaken = reallyTaken.getTime();
+                var last_email_sent = new Date(t_all[i].notificationEmailDate);
+                last_email_sent = last_email_sent.getTime();
+                if(last_email_sent < reallyTaken) {
+                  new_territory_taken_emails++;
+                } 
+                var taken = new Date(t_all[i].taken);
+                taken = taken.getTime();
+                if(not_covered_limit > taken && last_email_sent < (now - 30*1000*60*60*24)) {
+                  not_covered_territory_emails++;
+                }
+              } else if(!t_all[i].notificationEmailDate && t_all[i].holder != sails.config.default_territory_holder_id) {
+                new_territory_taken_emails++;
+              }
+            }
+
+            Territory.count(function(err, count_all) {
+              return response.view({
+                viewOptions: pageOptions,
+                allLetters : possibleLetters,
+                availableLetters : only_available_letters,
+                totalCount : count_all,
+                territoryTakenNotificationCount : new_territory_taken_emails,
+                territoryNotCoveredNotificationCount : not_covered_territory_emails,
+                territories : out_t
+              });
             });
           });
   	  	}
       });
   	});
+  },
+
+  sendNotificationEmails : function(request, response) {
+    // create reusable transport method (opens pool of SMTP connections)
+    var smtpTransport = nodemailer.createTransport("SMTP",{
+        service: "Gmail",
+        auth: {
+          user: sails.config.smtp_username,
+          pass: sails.config.smtp_password
+        }
+    });
+
+    Territory.find().exec(function(err, t_all) {
+      Holder.find().exec(function(err, h_all) {
+        var new_territory_taken_emails = 0;
+        var not_covered_territory_emails = 0;
+        var now = new Date();
+        now = now.getTime();
+        var mails = [];
+        var t_to_be_updated = [];
+        var not_covered_limit = now - (1000*60*60*24*sails.config.limit_for_rarely_covered_territory);
+        for(var i = 0; i < t_all.length; i++) {
+          if(t_all[i].notificationEmailDate && t_all[i].holder != sails.config.default_territory_holder_id) {
+            var reallyTaken = new Date(t_all[i].reallyTaken);
+            reallyTaken = reallyTaken.getTime();
+            var last_email_sent = new Date(t_all[i].notificationEmailDate);
+            last_email_sent = last_email_sent.getTime();
+            if(last_email_sent < reallyTaken) {
+              new_territory_taken_emails++;
+              t_to_be_updated.push(t_all[i])
+              var mail = createEmailObject(t_all[i], t_all, h_all, sails.config.notificationEmail_new_territory);
+              if(typeof mail != 'undefined') {
+                mails.push(mail);
+              }
+            } 
+            var taken = new Date(t_all[i].taken);
+            taken = taken.getTime();
+            if(not_covered_limit > taken && last_email_sent < (now - 30*1000*60*60*24)) {
+              not_covered_territory_emails++;
+              t_to_be_updated.push(t_all[i])
+              var mail = createEmailObject(t_all[i], t_all, h_all, sails.config.notificationEmail_notCovered_territory);
+              if(typeof mail != 'undefined') {
+                mails.push(mail);
+              }
+            }
+          } else if(!t_all[i].notificationEmailDate && t_all[i].holder != sails.config.default_territory_holder_id) {
+            var mail = createEmailObject(t_all[i], t_all, h_all, sails.config.notificationEmail_new_territory);
+            t_to_be_updated.push(t_all[i]);
+            if(typeof mail != 'undefined') {
+              mails.push(mail);
+            }
+          }
+        }
+        async.each(t_to_be_updated, function(t, callback) {
+          t.notificationEmailDate = new Date();
+          t.save(function(err){
+            callback();
+          })
+        }, function(result) {
+          async.each(mails, function(mail, callback) {
+            smtpTransport.sendMail(mail, function(error, response){
+              if(error){
+                console.log(error);
+              }else{
+                console.log("Message sent: " + response.message);
+              }
+              callback();
+            });
+          }, function() {
+            smtpTransport.close(); // shut down the connection pool, no more messages
+            return response.redirect('/territory');
+          });
+        });
+      });
+    });
   },
 
   destroy : function(request, response) {
