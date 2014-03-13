@@ -57,11 +57,19 @@
         </div>
       </div>
     <% }) %>
+  <p class="bg-success"><%= i18n('Showing') %> <span class="badge badge-info"><%= territories.length %> / <%= totalCount %></span> <%= i18n('territories') %>.</p>
 </div>
 
 <div class="container">
-  <p class="bg-success"><%= i18n('Showing') %> <span class="badge badge-info"><%= territories.length %></span> <%= i18n('territories') %>. <%= i18n('Total count') %>: <span class="badge badge-info"><%= totalCount %></span>.</p>
-  <p class="bg-success"><%= i18n('Email notifications for just taken territories') %>: <span class="badge badge-info"><%= territoryTakenNotificationCount %></span>. <%= i18n('Email notifications for not covered territories') %>: <span class="badge badge-info"><%= territoryNotCoveredNotificationCount %></span>. <a href="territory/actions/sendemails"><%= i18n('Send notifications now') %></a></p>
+  <h4><%= i18n('Email notifications for territory holders') %></h4>
+  <dl class="dl-horizontal">
+    <dt><%= i18n('Just taken') %></dt>
+    <dd><span class="badge badge-info"><%= territoryTakenNotificationCount %></span></dd>
+    <dt><%= i18n('Not covered') %></dt>
+    <dd><span class="badge badge-info"><%= territoryNotCoveredNotificationCount %></span></dd>
+    <dt></dt>
+    <dd><a href="territory/actions/sendemails" class="btn btn-primary btn-mini"><%= i18n('Send now') %></a></dd>
+  </dl>
 </div>
 
 <div class="container">
