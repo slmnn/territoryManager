@@ -22,7 +22,11 @@
   }
 %>
 <div class="container">
-  <div class="page-header"><h2><%= holderName %></h2></div>
+  <div class="page-header"><h2><%= holderName %>
+    <% if(holderId != sails.config.default_territory_holder_id) { %>
+      <a class="pull-right" href="/holder/update/<%= holderId %>"><%= i18n('Edit') %></a>
+    <% } %>
+  </h2></div> 
     <% _.each(territories, function (t) { %>
     <div class="panel-heading">
       <h4 class="panel-title">

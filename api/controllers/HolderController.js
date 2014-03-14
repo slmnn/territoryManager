@@ -51,12 +51,10 @@ var createNewHolder = function(in_name, in_email, in_emailValid, callback) {
         var suggestion = in_name + '_' + t.length;
         callback("The name is not unique. Try '" + suggestion + "'", 500);
       } else {
-        console.log(in_emailValid);
         Holder.create({
           name : in_name,
           email : in_email,
-          emailValid : in_emailValid == "email_is_not_valid" ? false : true,
-          territories : []
+          emailValid : in_emailValid == "email_is_not_valid" ? false : true
         }).done(function(err, holder) {
           if(err) {
             callback(err, 500);
@@ -101,6 +99,44 @@ module.exports = {
             }); 
           }
         });
+    }
+  },
+
+  update : function(request, response) {
+    pageOptions.defaultHolderName = sails.config.default_territory_holder;
+    pageOptions.breadcrumbs = [{name : 'Territory holders', link : '/holder'}, {name : 'Edit holder', link: null}];
+    if(request.method == 'GET') {
+      Holder.findOne({'id' : request.params.id})
+      .exec(function(err, h) {
+        if(err || !h || h.length == 0) {
+          return response.send("Please give holder to be updated as a parameter.", 500);
+        }
+        return response.view({
+          viewOptions: pageOptions,
+          holder : h, 
+          actionResult : "Please edit holder information."
+        });
+      })
+    } else if(request.method == 'POST') {
+      if(request.body.input_name.length < 5 || request.body.input_email.length < 5) {
+        return response.view({
+          viewOptions : pageOptions,
+          actionResult : "Name and email are not ok."
+        });  
+      }
+      Holder.update(
+        {'id' : request.params.id},
+        {
+          name : request.body.input_name, 
+          email : request.body.input_email,
+          emailValid : (request.body.input_email_valid == "email_is_not_valid") ? false : true
+        }, function(err, h) {
+          if(err || !h || h.length == 0) {
+            return response.send(err, 500);
+          }
+          return response.redirect('holder/' + request.params.id);
+        }
+      );
     }
   },
 
@@ -168,6 +204,7 @@ module.exports = {
 	      return response.view({
           viewOptions : pageOptions,
 	        holderName : h.name,
+          holderId : h.id,
 	        territories : t
 	      });
 			});

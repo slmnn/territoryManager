@@ -459,7 +459,8 @@ module.exports = {
             });
           }, function() {
             smtpTransport.close(); // shut down the connection pool, no more messages
-            return response.redirect('/territory');
+            var next = typeof request.query.next != 'undefined' ? request.query.next : '/territory';
+            return response.redirect(next);
           });
         });
       });
