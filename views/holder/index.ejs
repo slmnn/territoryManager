@@ -40,19 +40,18 @@ var countTerritories = function(holder) {
   <% _.each(shortcuts(holders), function (sc) { %>
   	<h3 style="display:inline"><a href="#<%= sc %>"><%= sc %></a></h3>
   <% }) %>
- 	<ul>
+ 	<div>
 		<% var last = ""; %>
 	  <% _.each(holders, function (h) { %>
 	  <% if(h.name.charAt(0).toUpperCase() != last) { %>
 	  	<% last = h.name.charAt(0).toUpperCase() %>
 	  	<h3><a name="<%= h.name.charAt(0).toUpperCase() %>"></a><%= h.name.charAt(0).toUpperCase() %></h3>
 	  <% } %>
-	  <li>
-	  	<b><a href="<%= '/holder/' + h.id %>"><%= h.name %></a></b>
-      <span class="badge badge-info"><%= countTerritories(h) %></span>
-	  </li>
+	  <div class="row">
+	  	<div class="span11 offset1"><b><a href="<%= '/holder/' + h.id %>"><%= h.name %></a></b> <span class="badge badge-info pull-right"><%= countTerritories(h) %></span></div>
+	  </div>
 	  <% }) %>
-	</ul>
+	</div>
 </div>
 <%- partial('../partials/footer') %>
 
