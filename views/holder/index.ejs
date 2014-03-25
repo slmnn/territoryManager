@@ -21,6 +21,16 @@ var shortcuts = function(all_holders) {
 	return sort_unique(letters);
 }
 
+var countTerritories = function(holder) {
+  var count = 0;
+  for(var i = 0; i < territories.length; i++) {
+    if(territories[i].holder == holder.id) {
+      count++;
+    }
+  }
+  return count;
+}
+
 %>
 
 <div class="container">
@@ -39,6 +49,7 @@ var shortcuts = function(all_holders) {
 	  <% } %>
 	  <li>
 	  	<b><a href="<%= '/holder/' + h.id %>"><%= h.name %></a></b>
+      <span class="badge badge-info"><%= countTerritories(h) %></span>
 	  </li>
 	  <% }) %>
 	</ul>
