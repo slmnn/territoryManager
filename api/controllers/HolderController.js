@@ -228,6 +228,15 @@ module.exports = {
             }
           }
         }
+        var onlyRelatedHolders = [];
+        if(request.user[0].holderRelated && request.user[0].holderRelated === true) {
+          for(var i = 0; i < only_holders_with_territories.length; i++) {
+            if(only_holders_with_territories[i].id == request.user[0].relatedHolder || only_holders_with_territories[i].id == sails.config.default_territory_holder_id) {
+              onlyRelatedHolders.push(only_holders_with_territories[i]);
+            }
+          }
+          only_holders_with_territories = onlyRelatedHolders;
+        }
         pageOptions.breadcrumbs = [{name : 'Territory holders', link : null}];
 	  		return response.view({
           viewOptions : pageOptions,

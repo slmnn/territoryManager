@@ -27,6 +27,21 @@
 		</div>
 
 		<div class="control-group">
+		  <label class="control-label" for="input_type"><%= i18n('Type') %></label>
+		  <div class="controls">
+		    <select id="input_type" name="input_type" class="input-xlarge">
+					<% _.each(sails.config.territory_types, function (i) { %>
+						<% if(territory.type && i == territory.type) { %> 
+							<option value="<%= i %>" selected><%= i18n(i) %></option>
+						<% } else { %>
+							<option value="<%= i %>"><%= i18n(i) %></option>
+						<% } %>
+					<% }) %>
+		    </select>
+		  </div>
+		</div>
+
+		<div class="control-group">
 		  <label class="control-label" for="input_description"><%= i18n('Description') %></label>
 		  <div class="controls">                     
 		    <textarea class="field span4" rows="6" id="input_description" name="input_description" placeholder="Address, etc."><%= territory.description %></textarea>

@@ -15,7 +15,7 @@
       <% }) %>
       -->
 
-      &diams; <a href="?taken_days_ago=<%= sails.config.limit_for_rarely_covered_territory %>&only_free=true"><%= i18n('Not covered recently and available') %></a> (<a href="?taken_days_ago=<%= sails.config.limit_for_rarely_covered_territory %>"><%= i18n('all') %></a>) </li>
+      <span class="lgrey">&diams;</span> <a href="?taken_days_ago=<%= sails.config.limit_for_rarely_covered_territory %>&only_free=true"><%= i18n('Not covered recently and available') %></a> (<a href="?taken_days_ago=<%= sails.config.limit_for_rarely_covered_territory %>"><%= i18n('all') %></a>) </li>
       
   </ul>
 </div>  
@@ -68,24 +68,30 @@
     <% } else if (notif_count > 10) { %>
       <span class="badge badge-important">
     <% } %>
-    <%= (territoryTakenNotificationCount + territoryNotCoveredNotificationCount) %></span>. <a href="territory/actions/sendemails"><%= i18n('Send now') %></a></p>
+    <%= (territoryTakenNotificationCount + territoryNotCoveredNotificationCount) %></span>. <a href="territory/actions/sendemails"><%= i18n('Send now') %></a> <i class="icon-question-sign" rel="tooltip" data-placement="bottom" title="<%= i18n('Email notifications remind of taken and not covered territories.') %>"></i></p>
   <% } %>
 </div>
 
 <div class="container">
   <ul class="breadcrumb list-inline">
-    <li><a href="/"><%= i18n('Territories on a map') %></a></li> &diams;
-    <li><a href="/territory/stats"><%= i18n('Stats') %></a></li> &diams;
+    <li><a href="/"><%= i18n('Territories on a map') %></a></li> <span class="lgrey">&diams;</span>
+    <li><a href="/territory/stats"><%= i18n('Stats') %></a></li> <span class="lgrey">&diams;</span>
     <li><a href="/territory/s13"><%= i18n('S-13') %></a></li>
     <% if(viewOptions.currentUserType && viewOptions.currentUserType != 'restricted') { %>
-       &diams;
+       <span class="lgrey">&diams;</span>
       <li><a href="/territory/actions/add"><%= i18n('Add new territory') %></a></li>
     <% } %>
     <% if(viewOptions.currentUsername == 'admin') { %>
-       &diams;
+       <span class="lgrey">&diams;</span>
       <li><a href="/territory/destroy"><%= i18n('Remove territory') %></a></li>
     <% } %>
   </ul>
 </div>
 
 <%- partial('../partials/footer') %>
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script>
+  jQuery(function ($) {
+    $("i").tooltip()
+  });
+</script>

@@ -61,6 +61,7 @@ var createNewTerritory = function(in_territory, callback) {
           territoryLetter : in_territory.letter,
           territoryNumber : parseInt(in_territory.number),
           territoryCode   : in_territory.letter + in_territory.number,
+          type : in_territory.type,
           taken : new Date(),
           reallyTaken : new Date(),
           lat : in_territory.lat,
@@ -83,6 +84,7 @@ var convertHolderIDtoName = function(t, h) {
     for(var j = 0; j < h.length; j++) {
       if(h[j].id == h_id) {
         t[i].holder = h[j].name;
+        t[i].holder_id = h[j].id;
         continue;
       }
     }
@@ -226,10 +228,12 @@ module.exports = {
         });
       })
     } else if(request.method == 'POST') {
+      // TODO: Sanitization
       Territory.update(
         {territoryCode:request.params.id},
         {
           description : request.body.input_description,
+          type : request.body.input_type,
           lat : request.body.input_lat,
           lng : request.body.input_lng
         }, function(err, t) {
@@ -285,12 +289,22 @@ module.exports = {
   	} else {
   		Territory.find(searchParameters).sort('territoryLetter').sort('territoryNumber').exec(function(err, t) {
         Holder.find().exec(function(err, h) {
+          var possibleHolders = h;
+          if(request.user[0].holderRelated && request.user[0].holderRelated === true) {
+            possibleHolders = [];
+            for(var i = 0; i < h.length; i++) {
+              if(h[i].id == request.user[0].relatedHolder || h[i].id == sails.config.default_territory_holder_id) {
+                possibleHolders.push(h[i]);
+              }
+            }
+          }
           var t_with_names = convertHolderIDtoName(t, h);
           pageOptions.currentUsername = request.user[0].username;
           pageOptions.currentUserType = request.user[0].type;
           return response.view({
             viewOptions: pageOptions,
-            possibleHolders : h,
+            relatedHolder: (request.user[0].holderRelated === true) ? request.user[0].relatedHolder : sails.config.default_territory_holder_id,
+            possibleHolders : possibleHolders,
             territories : t_with_names
           });      
         })
@@ -509,6 +523,7 @@ module.exports = {
         { 
           letter : request.body.input_letter, 
           number : parseInt(request.body.input_number), 
+          type : request.body.input_type, 
           lat : request.body.input_lat, 
           lng : request.body.input_lng, 
           description : request.body.input_description
@@ -677,6 +692,9 @@ module.exports = {
       var available_count = 0;
       var not_covered_count = 0;
       var covered_sometime_count = 0;
+      var phone_count = 0;
+      var business_count = 0;
+      var not_covered_bp_count = 0;
       var now = new Date();
       var not_covered_limit = now.getTime() - 1000 * 60 * 60 * 24 * sails.config.limit_for_rarely_covered_territory;
       for(var i = 0; i < t.length; i++) {
@@ -685,7 +703,18 @@ module.exports = {
           average_covered_time += t[i].lastCoveredTime;
           covered_sometime_count++;
         } 
-        if(covered < not_covered_limit) {
+        if(t[i].type && t[i].type == "Phone") {
+          phone_count++;
+          if(covered < not_covered_limit) {
+            not_covered_bp_count++;
+          }
+        } else if(t[i].type && t[i].type == "Business") {
+          business_count++;
+          if(covered < not_covered_limit) {
+            not_covered_bp_count++;
+          }
+        } 
+        if (covered < not_covered_limit) {
           not_covered_count++;
         }
         if(t[i].holder != sails.config.default_territory_holder_id) {
@@ -699,13 +728,17 @@ module.exports = {
         average_covered_time = average_covered_time / covered_sometime_count;
       if((t.length - available_count) != 0)
         average_holding_time = average_holding_time / ( t.length - available_count );
-
+      not_covered_count -= not_covered_bp_count;
+      total_count -= (phone_count + business_count);
       Stats.create({
         statistic_date : new Date(),
         average_covered_time : average_covered_time,
         average_holding_time : average_holding_time,
         total_count : total_count,
         not_covered_count : not_covered_count,
+        phone_count : phone_count,
+        business_count : business_count,
+        not_covered_bp_count : not_covered_bp_count,
         available_count : available_count
       }).done(function(err, s) {
         Stats.find().exec(function(err, all_stats) {
@@ -719,6 +752,9 @@ module.exports = {
             average_holding : formDaysMonthsYearsObject(average_holding_time),
             count : total_count,
             available_count : available_count,
+            phone_count : phone_count,
+            business_count : business_count,
+            not_covered_bp_count : not_covered_bp_count,
             not_covered_count : not_covered_count
           });
         });

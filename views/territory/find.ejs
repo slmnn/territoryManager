@@ -66,6 +66,7 @@
               <% } %>
             </dd>
           <% } %>
+          <dt><%= i18n('Type') %></dt><dd><%= i18n(t.type) %></dd>
           <dt><%= i18n('Description') %></dt><dd><pre><%= t.description %></pre></dd>
           <dt><%= i18n('Map') %></dt>
           <dd>
@@ -75,51 +76,53 @@
           <br/>
           <br/>
           </dd>
-          <dt><%= i18n('Change Holder') %></dt>
-          <dd>
-            <form action="/territory/actions/holder" method="post" class="form-inline" role="form">
-              <div class="form-group">
-                <select name="input_holder" id="input_holder" class="form-control">
-                  <% _.each(possibleHolders, function (i) { %>
-                    <option value="<%= i.name %>" <%= (i.name == t.holder) ? "disabled" : "" %> ><%= i.name %></option>
-                  <% }) %>
-                </select>
-                <input  class="form-control" type="hidden"id="input_letter" name="input_letter" value="<%= t.territoryLetter %>">
-                <input  class="form-control" type="hidden"id="input_number" name="input_number" value="<%= t.territoryNumber %>">
-                <button  class="form-control btn btn-default" id="input_submit" type="submit">
-                  <%= i18n('Set') %>
+          <% if(relatedHolder == sails.config.default_territory_holder_id || relatedHolder == t.holder_id || t.holder_id == sails.config.default_territory_holder_id) { %>
+            <dt><%= i18n('Change Holder') %></dt>
+            <dd>
+              <form action="/territory/actions/holder" method="post" class="form-inline" role="form">
+                <div class="form-group">
+                  <select name="input_holder" id="input_holder" class="form-control">
+                    <% _.each(possibleHolders, function (i) { %>
+                      <option value="<%= i.name %>" <%= (i.name == t.holder) ? "disabled" : "" %> ><%= i.name %></option>
+                    <% }) %>
+                  </select>
+                  <input  class="form-control" type="hidden"id="input_letter" name="input_letter" value="<%= t.territoryLetter %>">
+                  <input  class="form-control" type="hidden"id="input_number" name="input_number" value="<%= t.territoryNumber %>">
+                  <button  class="form-control btn btn-default" id="input_submit" type="submit">
+                    <%= i18n('Set') %>
+                  </button>
+                </div>
+              </form>
+            </dd>
+            <% if(t.holder != viewOptions.defaultHolderName) { %>
+            <dt><%= i18n('Mark as covered') %></dt>
+            <dd>
+              <form action="/territory/actions/holder" method="post" class="form-inline" role="form">
+                <input type="hidden"id="input_holder" name="input_holder" value="<%= t.holder %>">
+                <input type="hidden"id="input_letter" name="input_letter" value="<%= t.territoryLetter %>">
+                <input type="hidden"id="input_number" name="input_number" value="<%= t.territoryNumber %>">
+                <button id="input_submit" type="submit" class="btn btn-default">
+                  <%= i18n('Assign to the same holder again (mark as covered)') %>
                 </button>
-              </div>
-            </form>
-          </dd>
-          <% if(t.holder != viewOptions.defaultHolderName) { %>
-          <dt><%= i18n('Mark as covered') %></dt>
-          <dd>
-            <form action="/territory/actions/holder" method="post" class="form-inline" role="form">
-              <input type="hidden"id="input_holder" name="input_holder" value="<%= t.holder %>">
-              <input type="hidden"id="input_letter" name="input_letter" value="<%= t.territoryLetter %>">
-              <input type="hidden"id="input_number" name="input_number" value="<%= t.territoryNumber %>">
-              <button id="input_submit" type="submit" class="btn btn-default">
-                <%= i18n('Assign to the same holder again (mark as covered)') %>
-              </button>
-              <% if(taken.getTime() < not_returned) { %>
-                <p class="text-error">
-                  <%= i18n('Please notice: the same owner has had this territory for a long time.') %>
-                </p>
-              <% } %>
-            </form>
-          </dd>
-          <dt><%= i18n('Return') %></dt>
-          <dd>
-            <form action="/territory/actions/holder" method="post" class="form-inline" role="form">
-              <input type="hidden"id="input_holder" name="input_holder" value="<%= viewOptions.defaultHolderName %>">
-              <input type="hidden"id="input_letter" name="input_letter" value="<%= t.territoryLetter %>">
-              <input type="hidden"id="input_number" name="input_number" value="<%= t.territoryNumber %>">
-              <button id="input_submit" type="submit" class="btn btn-default">
-                <%= i18n('Return to the territory desk') %>
-              </button>
-            </form>            
-          </dd>
+                <% if(taken.getTime() < not_returned) { %>
+                  <p class="text-error">
+                    <%= i18n('Please notice: the same owner has had this territory for a long time.') %>
+                  </p>
+                <% } %>
+              </form>
+            </dd>
+            <dt><%= i18n('Return') %></dt>
+            <dd>
+              <form action="/territory/actions/holder" method="post" class="form-inline" role="form">
+                <input type="hidden"id="input_holder" name="input_holder" value="<%= viewOptions.defaultHolderName %>">
+                <input type="hidden"id="input_letter" name="input_letter" value="<%= t.territoryLetter %>">
+                <input type="hidden"id="input_number" name="input_number" value="<%= t.territoryNumber %>">
+                <button id="input_submit" type="submit" class="btn btn-default">
+                  <%= i18n('Return to the territory desk') %>
+                </button>
+              </form>            
+            </dd>
+            <% } %>
           <% } %>
           <% if(t.holderHistory && t.holderHistory.length > 0) { %>
           <dt><%= i18n('History') %></dt>

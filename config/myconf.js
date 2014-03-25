@@ -7,7 +7,8 @@ module.exports = {
   admin_init_password : '2348jhj3hh',
 
   limit_for_rarely_covered_territory : process.env.LIMIT_RARELY_COVERED, // days
-  territory_letters : ['A','H','K','L','M','N','V'],
+  territory_letters : ['A','E','H','K','L','M','N','V','B','P'],
+  territory_types : ['Normal', 'Business', 'Phone'],
 
   smtp_username : process.env.SMTP_USERNAME,
   smtp_password : process.env.SMTP_PASSWORD,

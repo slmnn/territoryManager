@@ -31,6 +31,19 @@
 			</div>
 
 			<div class="control-group">
+			  <label class="control-label" for="input_relatedHolder"><%= i18n('Related holder') %></label>
+			  <div class="controls">
+			  	<input id="input_holderRelated" name="input_holderRelated" type="checkbox" class="input-xlarge" value="input_holderRelated"><%= i18n('This account is holder related') %></input>
+			  	<br/>
+			    <select id="input_relatedHolder" name="input_relatedHolder" class="input-xlarge">
+						<% _.each(holders, function (i) { %>
+							<option value="<%= i.id %>"><%= i.name %></option>
+						<% }) %>
+			    </select>
+			  </div>
+			</div>
+
+			<div class="control-group">
 			  <label class="control-label" for="input_password2"><%= i18n('Account type') %> (<%= i18n('required') %>)</label>
 			  <div class="controls">
 			    <input type="radio" name="input_type" value="regular">

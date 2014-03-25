@@ -30,6 +30,10 @@ module.exports = {
     /* admin, regular, restricted */
     type : 'string',
 
+    /* user can only change his own territories */
+    holderRelated: 'BOOLEAN',
+    relatedHolder: 'INTEGER',
+
     //Override toJSON method to remove password from API
     toJSON: function() {
       var obj = this.toObject();
