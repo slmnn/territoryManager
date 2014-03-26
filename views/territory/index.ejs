@@ -10,7 +10,7 @@
     <% if (notif_count > 0) { %>
       <div class="alert alert-info">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <h4><%= i18n('Email notifications') %><i class="icon-question-sign" rel="tooltip" data-placement="bottom" title="<%= i18n('Email notifications remind of taken and not covered territories.') %>"></i></h4>
+        <h4><i class="fa fa-envelope"></i> <%= i18n('Email notifications') %><i class="icon-question-sign" rel="tooltip" data-placement="bottom" title="<%= i18n('Email notifications remind of taken and not covered territories.') %>"></i></h4>
         <%= i18n('Unsent notifications for territory holders') %> 
         <% if (notif_count > 0 && notif_count < 6) { %>
           <span class="badge badge-info">
@@ -24,17 +24,37 @@
     <% } %>
 </div>
 
+<% if (actionResult.length > 0) { %>
 <div class="container">
-  <ul class="breadcrumb list-inline">
-    <%= i18n('Filter') %>:
-    <li><a href="?only_free=true"><%= i18n('Available') %></a> (<a href="?only_free=false"><%= i18n('all') %></a>)</li>
+  <div class="alert alert-info">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <%= actionResult %>
+    <a class="btn btn-mini btn-primary" href="territory"><%= i18n('Show all') %></a>
+  </div>
+</div>
+<% } %>
 
-      <span class="lgrey">&diams;</span> <a href="?taken_days_ago=<%= sails.config.limit_for_rarely_covered_territory %>&only_free=true"><%= i18n('Not covered recently and available') %></a> (<a href="?taken_days_ago=<%= sails.config.limit_for_rarely_covered_territory %>"><%= i18n('all') %></a>) </li>
+<div class="container">
+<div class="btn-group pull-right">
+  <button class="btn dropdown-toggle" data-toggle="dropdown">
+    <i class="fa fa-2x fa-filter"></i><span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+      <li><a href="?only_free=true"><i class="fa fa-fw fa-home"></i> <%= i18n('Available') %></a></li>
+
+      <li><a href="?taken_days_ago=<%= sails.config.limit_for_rarely_covered_territory %>&only_free=false"><i class="fa fa-fw fa-warning"></i> <%= i18n('Not covered') %></a></li>
       
-  </ul>
-</div>  
+      <li><a href="?type=Business"><i class="fa fa-fw fa-shopping-cart"></i> <%= i18n('Business territories') %></a></li>
 
-<div class="container">
+      <li><a href="?type=Phone"><i class="fa fa-fw fa-phone"></i> <%= i18n('Phone territories') %></a></li>
+      <li class="divider"></li>
+      <li>
+        <a href="/territory">
+          <i class="fa fa-fw fa-power-off"></i> <%= i18n('Filters off') %>
+        </a>
+      </li>
+    </ul>
+  </div>
     <% _.each(availableLetters, function (letter) { %>
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -77,16 +97,16 @@
 
 <div class="container">
   <ul class="breadcrumb list-inline">
-    <li><a href="/"><%= i18n('Territories on a map') %></a></li> <span class="lgrey">&diams;</span>
-    <li><a href="/territory/stats"><%= i18n('Stats') %></a></li> <span class="lgrey">&diams;</span>
-    <li><a href="/territory/s13"><%= i18n('S-13') %></a></li>
+    <li><i class="fa fa-map-marker"></i> <a href="/"><%= i18n('Territories on a map') %></a></li> <span class="lgrey">&diams;</span>
+    <li><i class="fa fa-bar-chart-o"></i> <a href="/territory/stats"><%= i18n('Stats') %></a></li> <span class="lgrey">&diams;</span>
+    <li><i class="fa fa-columns"></i> <a href="/territory/s13"><%= i18n('S-13') %></a></li>
     <% if(viewOptions.currentUserType && viewOptions.currentUserType != 'restricted') { %>
        <span class="lgrey">&diams;</span>
-      <li><a href="/territory/actions/add"><%= i18n('Add new territory') %></a></li>
+      <li><i class="fa fa-plus"></i> <a href="/territory/actions/add"><%= i18n('Add new territory') %></a></li>
     <% } %>
     <% if(viewOptions.currentUsername == 'admin') { %>
        <span class="lgrey">&diams;</span>
-      <li><a href="/territory/destroy"><%= i18n('Remove territory') %></a></li>
+      <li><i class="fa fa-trash-o"></i> <a href="/territory/destroy"><%= i18n('Remove territory') %></a></li>
     <% } %>
   </ul>
 </div>

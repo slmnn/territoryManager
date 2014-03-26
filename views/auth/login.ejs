@@ -6,12 +6,12 @@
 
   <form action="/login" method="post" class="form-horizontal">
     <fieldset>
-      <label for="username"><%= i18n('Username') %></label>
+      <label for="username"><i class="fa fa-user"></i> <%= i18n('Username') %></label>
       <input type="text" name="username" class="input-xlarge"></input>
-      <label for="password"><%= i18n('Password') %></label>
+      <label for="password"><i class="fa fa-key"></i> <%= i18n('Password') %></label>
       <input type="password" name="password" class="input-xlarge"></input>
       <br/><br/>
-      <input type="submit" value="<%= i18n('Log in') %>" class="btn btn-primary"></input>
+      <button type="submit" class="btn btn-primary"><i class="fa fa-sign-in"></i> <%= i18n('Log in') %></button>
     </fieldset>  
   </form>
 

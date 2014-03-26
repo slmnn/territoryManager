@@ -57,10 +57,10 @@ var countTerritories = function(holder) {
 
 <div class="container">
   <ul class="breadcrumb list-inline">
-    <li><a href="/holder/create"><%= i18n('Add new holder') %></a></li>
+    <li><i class="fa fa-plus"></i> <a href="/holder/create"><%= i18n('Add new holder') %></a></li>
     <% if(viewOptions.currentUsername == 'admin') { %>
       <span class="lgrey">&diams;</span>
-      <li><a href="/holder/destroy"><%= i18n('Remove holder') %></a></li>
+      <li><i class="fa fa-trash-o"></i> <a href="/holder/destroy"><%= i18n('Remove holder') %></a></li>
     <% } %>
   </ul>
 </div>

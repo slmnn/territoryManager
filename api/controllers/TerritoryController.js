@@ -318,18 +318,33 @@ module.exports = {
     pageOptions.currentUserType = request.user[0].type;
     pageOptions.defaultHolderName = sails.config.default_territory_holder;
 
+    var appliedFilters = [];
+
     var filter = { };
     if(request.query.only_free == 'true') {
       filter.holder = sails.config.default_territory_holder_id;
+      appliedFilters.push("only available");
+    }
+    if(request.query.type) {
+      filter.type = request.query.type;
+      appliedFilters.push("only " + request.query.type);
     }
     if(request.query.letter) {
       filter.territoryLetter = request.query.letter;
+      appliedFilters.push("only " + request.query.letter);
     }
     if(request.query.taken_days_ago) {
       var milliseconds_ago = request.query.taken_days_ago * 24 * 60 * 60 * 1000;
       var oldDate = new Date();
       oldDate.setTime(oldDate.getTime() - milliseconds_ago);
       filter.taken = { '<=' : oldDate };
+      appliedFilters.push("taken " + request.query.taken_days_ago + " days ago");
+    }
+
+    if(appliedFilters.length > 0) {
+      message = "Filters applied. Some territories may not be shown."
+    } else {
+      message = "";
     }
 
   	Territory.find(filter).sort('territoryLetter').sort('territoryNumber')
@@ -392,7 +407,8 @@ module.exports = {
                 totalCount : count_all,
                 territoryTakenNotificationCount : new_territory_taken_emails,
                 territoryNotCoveredNotificationCount : not_covered_territory_emails,
-                territories : out_t
+                territories : out_t,
+                actionResult : message
               });
             });
           });

@@ -44,8 +44,8 @@
 <% if(viewOptions.currentUsername == 'admin') { %>
 <div class="container">
   <ul class="breadcrumb list-inline">
-    <li><a href="/user/create"><%= i18n('Create new user account') %></a></li> <span class="lgrey">&diams;</span>
-    <li><a href="/user/destroy"><%= i18n('Remove user account') %></a></li>
+    <li><i class="fa fa-plus"></i> <a href="/user/create"><%= i18n('Create new user account') %></a></li> <span class="lgrey">&diams;</span>
+    <li><i class="fa fa-trash-o"></i> <a href="/user/destroy"><%= i18n('Remove user account') %></a></li>
   </ul>
 </div>
 <% } %>

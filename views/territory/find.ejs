@@ -34,7 +34,7 @@
       <div class="panel-heading">
         <h3 class="panel-title"><a href="/territory/<%= t.territoryLetter %>/<%= t.territoryNumber %>"><%= t.territoryCode %></a>
           <% if(viewOptions.currentUserType && viewOptions.currentUserType != 'restricted') { %>
-            <a class="pull-right" href="/territory/actions/update/<%= t.territoryCode %>"><%= i18n('Edit') %></a>
+            <a class="pull-right" href="/territory/actions/update/<%= t.territoryCode %>"><i class="fa fa-edit"></i></a>
           <% } %>
         </h3>
 
@@ -47,7 +47,7 @@
             <% var taken = new Date(t.taken); %> 
             <% if(taken < not_covered) { %>
               <span style="color:#FF3300; font-weight:bold">
-                <%= taken.getFullYear() + '-' + (taken.getMonth()+1) + '-' + taken.getDate() %>
+                <i class="fa fa-warning"></i> <%= taken.getFullYear() + '-' + (taken.getMonth()+1) + '-' + taken.getDate() %>
               </span>
             <% } else { %>
               <%= taken.getFullYear() + '-' + (taken.getMonth()+1) + '-' + taken.getDate() %>
@@ -58,7 +58,7 @@
             <dd>
               <% var taken = new Date(t.reallyTaken); %> <%= taken.getFullYear() + '-' + (taken.getMonth()+1) + '-' + taken.getDate() %>
               <% if(taken.getTime() < not_returned) { %>
-                (<span style="color:#FF3300; font-weight:bold">
+                (<span style="color:#FF3300; font-weight:bold"><i class="fa fa-warning"></i> 
                   <%= i18n('Taken ') %><%= daysBetween(new Date(t.reallyTaken), new Date()) %>
                 </span>)
               <% } else { %>
@@ -89,7 +89,7 @@
                   <input  class="form-control" type="hidden"id="input_letter" name="input_letter" value="<%= t.territoryLetter %>">
                   <input  class="form-control" type="hidden"id="input_number" name="input_number" value="<%= t.territoryNumber %>">
                   <button  class="form-control btn btn-default" id="input_submit" type="submit">
-                    <%= i18n('Set') %>
+                    <i class="fa fa-exchange"></i> <%= i18n('Set') %>
                   </button>
                 </div>
               </form>
@@ -102,7 +102,7 @@
                 <input type="hidden"id="input_letter" name="input_letter" value="<%= t.territoryLetter %>">
                 <input type="hidden"id="input_number" name="input_number" value="<%= t.territoryNumber %>">
                 <button id="input_submit" type="submit" class="btn btn-default">
-                  <%= i18n('Assign to the same holder again (mark as covered)') %>
+                  <i class="fa fa-repeat"></i> <%= i18n('Assign to the same holder again (mark as covered)') %>
                 </button>
                 <% if(taken.getTime() < not_returned) { %>
                   <p class="text-error">
@@ -118,7 +118,7 @@
                 <input type="hidden"id="input_letter" name="input_letter" value="<%= t.territoryLetter %>">
                 <input type="hidden"id="input_number" name="input_number" value="<%= t.territoryNumber %>">
                 <button id="input_submit" type="submit" class="btn btn-default">
-                  <%= i18n('Return to the territory desk') %>
+                  <i class="fa fa-home"></i> <%= i18n('Return to the territory desk') %>
                 </button>
               </form>            
             </dd>
