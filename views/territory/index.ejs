@@ -28,7 +28,7 @@
 <div class="container">
   <div class="alert alert-info">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
-    <%= i18n(actionResult) %>
+    <%= i18n('Showing') %> <span class="badge badge-info"><%= territories.length %> / <%= totalCount %></span> <%= i18n('territories') %>.
     <a class="btn btn-mini btn-primary" href="territory"><%= i18n('Show all') %></a>
   </div>
 </div>
@@ -37,7 +37,7 @@
 <div class="container">
 <div class="btn-group pull-right">
   <button class="btn dropdown-toggle" data-toggle="dropdown">
-    <i class="fa fa-2x fa-filter"></i><span class="caret"></span>
+    <i class="icon-filter"></i> <span class="caret"></span>
   </button>
   <ul class="dropdown-menu">
       <li><a href="?only_free=true"><i class="fa fa-fw fa-home"></i> <%= i18n('Available') %></a></li>
@@ -55,6 +55,13 @@
       </li>
     </ul>
   </div>
+
+  <% if(territories.length === 0) { %>
+    <div class="container">
+      <i class="fa fa-warning"></i> <%= i18n('No territories') %>.
+    </div>
+  <% } %>
+
     <% _.each(availableLetters, function (letter) { %>
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -92,7 +99,6 @@
         </div>
       </div>
     <% }) %>
-  <p class="bg-success"><%= i18n('Showing') %> <span class="badge badge-info"><%= territories.length %> / <%= totalCount %></span> <%= i18n('territories') %>.</p>
 </div>
 
 <div class="container">
