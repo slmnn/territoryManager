@@ -24,14 +24,29 @@ body {
 -------------------------------------------------- */
 /* Not required for template or sticky footer method. */
 
+@media (max-width: 480px) {
+    .container {
+      padding:0;
+      margin:0;
+    }
 
+    body {
+      padding:0;
+    }
+
+    .navbar-fixed-top, .navbar-fixed-bottom, .navbar-static-top {
+      margin-left: 0;
+      margin-right: 0;
+      margin-bottom:0;
+    }
+}
 
 body {
   padding-top: 70px;
 }
 
 body > .container {
-  padding: 10px 15px 0;
+  padding: 10px 10px 0;
 }
 
 .dropdown {
@@ -79,9 +94,14 @@ code {
   border: 1px solid black; 
   float:left; 
   min-height:500px; 
-  width: 150px;
+  width: 124px;
   overflow: hidden;
   white-space:nowrap;
   display: inline-block;
   text-align: center;
+  font-size: 1em;
+}
+
+.s13 .small {
+  font-size: 0.82em;
 }

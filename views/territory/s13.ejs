@@ -1,23 +1,23 @@
 
 <div class="container">
   <% _.each(territories, function (t, t_index) { %>
-    <% if (!(t_index % 4)) { %>
+    <% if (!(t_index % 5)) { %>
       <div style="page-break-after : always; page-break-inside: avoid; display : inline-block;">
         <h3>Aluekorttiluettelo</h3>
     <% } %>
     <table border="1px" class="s13">
-      <th colspan="2" width="150px"><%= t.territoryCode %></th>
+      <th colspan="2" width="124px"><%= t.territoryCode %></th>
         <% var rowCount = 0 %>
         <% for(var i = 0; i < t.holderHistoryWithNames.length; i++) { %>
           <% if(t.holderHistoryWithNames[i][0] == sails.config.default_territory_holder) { continue; } %>
           <% if(i>0) { %>
             <% rowCount++; %>
             <tr><td colspan="2"><%= i18n(t.holderHistoryWithNames[i][0]) %></td></tr>
-            <td>
+            <td class="small">
               <% var d = new Date(t.holderHistoryWithNames[i-1][1]) %>
               <%= d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate() %>
             </td>
-            <td>
+            <td class="small">
               <% var d = new Date(t.holderHistoryWithNames[i][1]) %>
               <%= d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate() %>
             </td>
@@ -27,7 +27,7 @@
           <% rowCount++ %>
           <tr><td colspan="2"><%= i18n(t.holder) %></td></tr>
           <tr>
-            <td>
+            <td class="small">
               <% var d = new Date(t.taken) %>
               <%= d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate() %>
             </td>
@@ -42,7 +42,7 @@
           <% rowCount++ %>
         <% } %>
     </table>
-    <% if ((t_index != 0 && !((t_index % 4) - 3)) || t_index == territories.length - 1) { %> 
+    <% if ((t_index != 0 && !((t_index % 5) - 4)) || t_index == territories.length - 1) { %> 
       </div>
     <% }  %>
   <% }) %>

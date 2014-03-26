@@ -40,6 +40,7 @@ module.exports[403] = function badRequest(message, req, res) {
   for (var key in result) {
     res.locals[key] = result[key];
   }
+  
   // And render view
   res.render(viewFilePath, result, function (err) {
     // If the view doesn't exist, or an error occured, send json

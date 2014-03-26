@@ -339,18 +339,6 @@ module.exports = {
   	  	if(request.wantsJSON) {
   	  		return response.json(all, 200);
   	  	} else {
-
-          var possibleLetters = figureOutPossibleLetters();
-          var only_available_letters = [];
-          for(var i = 0; i < possibleLetters.length; i++) {
-            for(var j = 0; j < t_with_names.length; j++) {
-              if(possibleLetters[i] == t_with_names[j].territoryLetter) {
-                only_available_letters.push(possibleLetters[i]);
-                break;
-              }
-            }
-          }
-
           var out_t = [];
           if(request.query.taken_days_ago) {
             for(var i = 0; i < t_with_names.length; i++) {
@@ -361,7 +349,16 @@ module.exports = {
           } else {
             out_t = t_with_names;
           }
-
+          var possibleLetters = figureOutPossibleLetters();
+          var only_available_letters = [];
+          for(var i = 0; i < possibleLetters.length; i++) {
+            for(var j = 0; j < out_t.length; j++) {
+              if(possibleLetters[i] == out_t[j].territoryLetter) {
+                only_available_letters.push(possibleLetters[i]);
+                break;
+              }
+            }
+          }
           Territory.find().exec(function(err, t_all) {
             var new_territory_taken_emails = 0;
             var not_covered_territory_emails = 0;
