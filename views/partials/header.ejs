@@ -23,14 +23,20 @@
   </div>
 </header>
 
+<% if(viewOptions.breadcrumbs.length > 1) { %>
 <div class="container">
   <ul class="breadcrumb list-inline">
-    <% _.each(viewOptions.breadcrumbs, function (bc) {  %>
+    <% _.each(viewOptions.breadcrumbs, function (bc, i) {  %>
       <% if(bc.link !== null) {  %>
-        <li><a href="<%= bc.link %>"><%= i18n(bc.name) %></a></li> /
+        <li><a href="<%= bc.link %>"><%= i18n(bc.name) %></a>
+          <% if(i != viewOptions.breadcrumbs.length - 1) { %><span class="divider">/</span><% } %>
+        </li> 
       <% } else {  %>
-        <li><%= i18n(bc.name) %></li> /
+        <li><%= i18n(bc.name) %>
+          <% if(i != viewOptions.breadcrumbs.length - 1) { %><span class="divider">/</span><% } %>
+        </li> 
       <% } %>
     <% }) %>
   </ul>
 </div>
+<% } %>

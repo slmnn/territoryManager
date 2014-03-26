@@ -6,19 +6,34 @@
   </div>
 </div>-->
 <div class="container">
+    <% notif_count = territoryTakenNotificationCount + territoryNotCoveredNotificationCount; %>
+    <% if (notif_count > 0) { %>
+      <div class="alert alert-info">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <h4><%= i18n('Email notifications') %><i class="icon-question-sign" rel="tooltip" data-placement="bottom" title="<%= i18n('Email notifications remind of taken and not covered territories.') %>"></i></h4>
+        <%= i18n('Unsent notifications for territory holders') %> 
+        <% if (notif_count > 0 && notif_count < 6) { %>
+          <span class="badge badge-info">
+        <% } else if (notif_count > 5 && notif_count < 11) { %>
+          <span class="badge badge-warning">
+        <% } else if (notif_count > 10) { %>
+          <span class="badge badge-important">
+        <% } %>
+        <%= (territoryTakenNotificationCount + territoryNotCoveredNotificationCount) %></span>. <a class="btn btn-mini btn-primary" href="territory/actions/sendemails"><%= i18n('Send now') %></a>
+      </div>
+    <% } %>
+</div>
+
+<div class="container">
   <ul class="breadcrumb list-inline">
     <%= i18n('Filter') %>:
     <li><a href="?only_free=true"><%= i18n('Available') %></a> (<a href="?only_free=false"><%= i18n('all') %></a>)</li>
-
-      <!--<% _.each(allLetters, function (letter) {  %>
-        <li> | <a href="?only_free=true&letter=<%= letter %>"><%= letter %> - <%= i18n('available') %></a> (<a href="?letter=<%= letter %>"><%= i18n('all') %></a>) 
-      <% }) %>
-      -->
 
       <span class="lgrey">&diams;</span> <a href="?taken_days_ago=<%= sails.config.limit_for_rarely_covered_territory %>&only_free=true"><%= i18n('Not covered recently and available') %></a> (<a href="?taken_days_ago=<%= sails.config.limit_for_rarely_covered_territory %>"><%= i18n('all') %></a>) </li>
       
   </ul>
 </div>  
+
 <div class="container">
     <% _.each(availableLetters, function (letter) { %>
       <div class="panel panel-default">
@@ -58,18 +73,6 @@
       </div>
     <% }) %>
   <p class="bg-success"><%= i18n('Showing') %> <span class="badge badge-info"><%= territories.length %> / <%= totalCount %></span> <%= i18n('territories') %>.</p>
-  <% notif_count = territoryTakenNotificationCount + territoryNotCoveredNotificationCount; %>
-  <% if (notif_count > 0) { %>
-    <p class="bg-success"><%= i18n('Unsent notifications') %> 
-    <% if (notif_count > 0 && notif_count < 6) { %>
-      <span class="badge badge-info">
-    <% } else if (notif_count > 5 && notif_count < 11) { %>
-      <span class="badge badge-warning">
-    <% } else if (notif_count > 10) { %>
-      <span class="badge badge-important">
-    <% } %>
-    <%= (territoryTakenNotificationCount + territoryNotCoveredNotificationCount) %></span>. <a href="territory/actions/sendemails"><%= i18n('Send now') %></a> <i class="icon-question-sign" rel="tooltip" data-placement="bottom" title="<%= i18n('Email notifications remind of taken and not covered territories.') %>"></i></p>
-  <% } %>
 </div>
 
 <div class="container">
