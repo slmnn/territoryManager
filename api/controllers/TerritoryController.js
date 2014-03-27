@@ -323,22 +323,22 @@ module.exports = {
     var filter = { };
     if(request.query.only_free == 'true') {
       filter.holder = sails.config.default_territory_holder_id;
-      appliedFilters.push("only available");
+      appliedFilters.push("only_free");
     }
     if(request.query.type) {
       filter.type = request.query.type;
-      appliedFilters.push("only " + request.query.type);
+      appliedFilters.push(request.query.type);
     }
     if(request.query.letter) {
       filter.territoryLetter = request.query.letter;
-      appliedFilters.push("only " + request.query.letter);
+      appliedFilters.push("letter");
     }
     if(request.query.taken_days_ago) {
       var milliseconds_ago = request.query.taken_days_ago * 24 * 60 * 60 * 1000;
       var oldDate = new Date();
       oldDate.setTime(oldDate.getTime() - milliseconds_ago);
       filter.taken = { '<=' : oldDate };
-      appliedFilters.push("taken " + request.query.taken_days_ago + " days ago");
+      appliedFilters.push("taken_days_ago");
     }
 
     if(appliedFilters.length > 0) {
@@ -408,6 +408,7 @@ module.exports = {
                 territoryTakenNotificationCount : new_territory_taken_emails,
                 territoryNotCoveredNotificationCount : not_covered_territory_emails,
                 territories : out_t,
+                filters : appliedFilters,
                 actionResult : message
               });
             });

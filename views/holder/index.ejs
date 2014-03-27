@@ -53,14 +53,14 @@ var countTerritories = function(holder) {
 	  <% }) %>
 	</div>
 </div>
-<%- partial('../partials/footer') %>
 
 <div class="container">
   <ul class="breadcrumb list-inline">
-    <li><i class="fa fa-plus"></i> <a href="/holder/create"><%= i18n('Add new holder') %></a></li>
+    <li><a href="/holder/create"><i class="fa fa-plus"></i> <%= i18n('Add new holder') %></a><span class="divider"></span></li>
     <% if(viewOptions.currentUsername == 'admin') { %>
-      <span class="lgrey">&diams;</span>
-      <li><i class="fa fa-trash-o"></i> <a href="/holder/destroy"><%= i18n('Remove holder') %></a></li>
+      <li><a href="/holder/destroy"><i class="fa fa-trash-o"></i> <%= i18n('Remove holder') %></a></li>
     <% } %>
   </ul>
 </div>
+
+<%- partial('../partials/footer') %>

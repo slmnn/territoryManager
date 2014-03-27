@@ -28,6 +28,10 @@ body {
   padding-top: 70px;
 }
 
+a {
+  white-space:nowrap;
+}
+
 body > .container {
   padding: 10px 10px 0;
 }

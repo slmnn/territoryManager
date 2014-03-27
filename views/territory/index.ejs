@@ -11,7 +11,7 @@
       <div class="alert alert-info">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         <h4><i class="fa fa-envelope"></i> <%= i18n('Email notifications') %><i class="icon-question-sign" rel="tooltip" data-placement="bottom" title="<%= i18n('Email notifications remind of taken and not covered territories.') %>"></i></h4>
-        <%= i18n('Unsent notifications for territory holders') %> 
+        
         <% if (notif_count > 0 && notif_count < 6) { %>
           <span class="badge badge-info">
         <% } else if (notif_count > 5 && notif_count < 11) { %>
@@ -19,7 +19,8 @@
         <% } else if (notif_count > 10) { %>
           <span class="badge badge-important">
         <% } %>
-        <%= (territoryTakenNotificationCount + territoryNotCoveredNotificationCount) %></span>. <a class="btn btn-mini btn-primary" href="territory/actions/sendemails"><%= i18n('Send now') %></a>
+        <%= (territoryTakenNotificationCount + territoryNotCoveredNotificationCount) %></span> 
+        <%= i18n('notification is ready to be sent') %>. <a class="btn btn-mini btn-primary" href="territory/actions/sendemails"><%= i18n('Send now') %></a>
       </div>
     <% } %>
 </div>
@@ -28,7 +29,20 @@
 <div class="container">
   <div class="alert alert-info">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
-    <%= i18n('Showing') %> <span class="badge badge-info"><%= territories.length %> / <%= totalCount %></span> <%= i18n('territories') %>.
+    <i class="fa fa-filter"></i>:
+    <% if(filters.indexOf('only_free') != -1) { %>
+      <i class="fa fa-fw fa-home"></i>
+    <% } %>
+    <% if(filters.indexOf('taken_days_ago') != -1) { %>
+      <i class="fa fa-fw fa-warning"></i>
+    <% } %>
+    <% if(filters.indexOf('Business') != -1) { %>
+      <i class="fa fa-fw fa-shopping-cart"></i>
+    <% } %>
+    <% if(filters.indexOf('Phone') != -1) { %>
+      <i class="fa fa-fw fa-phone"></i>
+    <% } %>
+     <%= i18n('Showing') %> <span class="badge badge-info"><%= territories.length %> / <%= totalCount %></span> <%= i18n('territories') %>.
     <a class="btn btn-mini btn-primary" href="territory"><%= i18n('Show all') %></a>
   </div>
 </div>
@@ -88,11 +102,6 @@
                 <% } %>
               </a>
             </li>
-            
-            <!--
-            <li><%= i18n('Holder') %>: <%= t.holder %></li>
-            <li><%= i18n('Taken') %>: <% var taken = new Date(t.taken); %> <%= taken.getFullYear() + '-' + (taken.getMonth()+1) + '-' + taken.getDate() %></li> -->
-
             <% } %>
             <% }) %>
           </ul>
@@ -103,16 +112,14 @@
 
 <div class="container">
   <ul class="breadcrumb list-inline">
-    <li><i class="fa fa-map-marker"></i> <a href="/"><%= i18n('Territories on a map') %></a></li> <span class="lgrey">&diams;</span>
-    <li><i class="fa fa-bar-chart-o"></i> <a href="/territory/stats"><%= i18n('Stats') %></a></li> <span class="lgrey">&diams;</span>
-    <li><i class="fa fa-columns"></i> <a href="/territory/s13"><%= i18n('S-13') %></a></li>
+    <li><a href="/"><i class="fa fa-map-marker"></i> <%= i18n('Territories on a map') %></a><span class="divider"></span></li>
+    <li><a href="/territory/stats"><i class="fa fa-bar-chart-o"></i> <%= i18n('Stats') %></a><span class="divider"></span></li> 
+    <li><a href="/territory/s13"><i class="fa fa-columns"></i> <%= i18n('S-13') %></a><span class="divider"></span></li>
     <% if(viewOptions.currentUserType && viewOptions.currentUserType != 'restricted') { %>
-       <span class="lgrey">&diams;</span>
-      <li><i class="fa fa-plus"></i> <a href="/territory/actions/add"><%= i18n('Add new territory') %></a></li>
+      <li><a href="/territory/actions/add"><i class="fa fa-plus"></i> <%= i18n('Add new territory') %></a><span class="divider"></span></li>
     <% } %>
     <% if(viewOptions.currentUsername == 'admin') { %>
-       <span class="lgrey">&diams;</span>
-      <li><i class="fa fa-trash-o"></i> <a href="/territory/destroy"><%= i18n('Remove territory') %></a></li>
+      <li><a href="/territory/destroy"><i class="fa fa-trash-o"></i> <%= i18n('Remove territory') %></a><span class="divider"></span></li>
     <% } %>
   </ul>
 </div>
