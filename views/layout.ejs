@@ -42,5 +42,15 @@
 
     <script type="text/javascript" src="/js/bootstrap.js"></script>
 
+    <script>
+    if (navigator.userAgent.match(/ZuneWP/i) || navigator.userAgent.match(/IEMobile/i)) {
+      var msViewportStyle = document.createElement("style");
+      msViewportStyle.appendChild(
+        document.createTextNode(".fa{display:none !important;}")
+      );
+      document.getElementsByTagName("head")[0].appendChild(msViewportStyle);
+    }
+    </script>
+
     </body>
 </html>
