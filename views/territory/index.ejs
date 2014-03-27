@@ -19,8 +19,10 @@
         <% } else if (notif_count > 10) { %>
           <span class="badge badge-important">
         <% } %>
-        <%= (territoryTakenNotificationCount + territoryNotCoveredNotificationCount) %></span> 
-        <%= i18n('notification is ready to be sent') %>. <a class="btn btn-mini btn-primary" href="territory/actions/sendemails"><%= i18n('Send now') %></a>
+        <%= notif_count %></span> 
+        <% if(notif_count == 1) { %><%= i18n('notification is ready to be sent') %>.<% } %>
+        <% if(notif_count > 1) { %><%= i18n('notifications are ready to be sent') %>.<% } %>
+        <a class="btn btn-mini btn-primary" href="territory/actions/sendemails"><%= i18n('Send now') %></a>
       </div>
     <% } %>
 </div>
