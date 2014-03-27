@@ -213,6 +213,7 @@ module.exports = {
 
   index : function(request, response) {
     pageOptions.currentUsername = request.user[0].username; 
+    pageOptions.userIsHolderRelated = request.user[0].holderRelated ? true : false;
   	Holder.find()
     .sort('name')
   	.exec(function(err, h){

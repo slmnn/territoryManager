@@ -54,6 +54,7 @@ var countTerritories = function(holder) {
 	</div>
 </div>
 
+<% if(!viewOptions.userIsHolderRelated) { %>
 <div class="container">
   <ul class="breadcrumb list-inline">
     <li><a href="/holder/create"><i class="fa fa-plus"></i> <%= i18n('Add new holder') %></a><span class="divider"></span></li>
@@ -62,5 +63,6 @@ var countTerritories = function(holder) {
     <% } %>
   </ul>
 </div>
+<% } %>
 
 <%- partial('../partials/footer') %>
