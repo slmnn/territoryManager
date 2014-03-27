@@ -10,7 +10,8 @@
     <% if (notif_count > 0) { %>
       <div class="alert alert-info">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <h4><i class="fa fa-envelope"></i> <%= i18n('Email notifications') %><i class="icon-question-sign" rel="tooltip" data-placement="bottom" title="<%= i18n('Email notifications remind of taken and not covered territories.') %>"></i></h4>
+        <h4><i class="fa fa-envelope"></i> <%= i18n('Email notifications') %>
+          <!--<i class="icon-question-sign" rel="tooltip" data-placement="bottom" title="<%= i18n('Email notifications remind of taken and not covered territories.') %>"></i>--></h4>
         
         <% if (notif_count > 0 && notif_count < 6) { %>
           <span class="badge badge-info">
