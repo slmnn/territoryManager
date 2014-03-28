@@ -1,7 +1,11 @@
 
 <%- partial('../partials/header')%>
-
 <div class="container">
+  <div class="page-header">
+  	<h2><%= i18n("Stats") %></h2>
+  	<%= i18n("Latest statistics counted in") %> <span id="lastStatDate"></span>
+  </div>
+
 	<dl class="dl-horizontal">
 		<dt><%= i18n("Total count") %></dt>
 		<dd><%= count %> <%= i18n("(Not including territories of phone/business type.)") %></dd>
@@ -40,6 +44,9 @@
   google.setOnLoadCallback(drawChart);
   function drawChart() {
   	jQuery.getJSON( "/territory/stats", function( data ) {
+
+  		var ld = new Date(data[data.length - 1].statistic_date);
+  		jQuery('#lastStatDate').text(ld.toLocaleDateString() + ' ' + ld.toLocaleTimeString());
 
   		var out_data_1 = [['Date','Covered time','Holding time']];
   		var out_data_2 = [['Date','Total','Not covered','Available']];
