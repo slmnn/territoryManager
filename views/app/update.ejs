@@ -1,0 +1,37 @@
+<!-- Update app settings -->
+
+<%- partial('../partials/header')%>
+
+<div class="container">
+  <div class="page-header"><%= i18n(viewOptions.message) %></div>
+
+	<form class="form-horizontal" action="/app/update" method="post">
+		<fieldset>
+
+			<legend><%= i18n('Edit application settings') %></legend>
+			<div class="control-group">
+			  <label class="control-label" for="input_interval"><%= i18n('Backup interval (days)') %></label>
+			  <div class="controls">
+			    <input id="input_interval" name="input_interval" type="number" min="1" max="14" class="input-xlarge" value="<%= currentSettings.backupInterval %>"></input>
+			  </div>
+			</div>
+
+			<div class="control-group">
+			  <label class="control-label" for="input_email"><%= i18n('Backup email') %></label>
+			  <div class="controls">
+			    <input id="input_email" name="input_email" type="email" placeholder="john.doe@example.com" class="input-xlarge" value="<%= currentSettings.backupEmail %>"></input>
+			  </div>
+			</div>
+
+			<div class="control-group">
+			  <div class="controls">
+			    <button id="input_submit" name="input_submit" class="btn btn-primary"><%= i18n('Save') %></button>
+			  </div>
+			</div>
+
+		</fieldset>
+	</form>
+
+</div>
+
+<%- partial('../partials/footer')%>

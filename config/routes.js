@@ -44,6 +44,9 @@ module.exports.routes = {
   'get /create': 'UserController.create',
   'post /create': 'UserController.create',
 
+  'get /app/update': 'AppController.update',
+  'post /app/update': 'AppController.update',
+
   'get /holder/name/:name' : 'HolderContoller.findName',
   'get /territory/s13' : 'TerritoryController.s13',
   'get /territory/stats' : 'TerritoryController.stats',

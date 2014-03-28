@@ -1,6 +1,12 @@
 {
   "Territory Manager" : "Alueiden hallinta",
   "Territories" : "Alueet",
+  "App Settings" : "Sovelluksen asetukset",
+  "Input new settings" : "Muuta asetuksia",
+  "Changes saved!" : "Muutokset tallennettu!",
+  "Backup interval (days)" : "Varmuuskopioinnin väli (päiviä)",
+  "Backup email" : "Sähköposti varmuuskopioille",
+  "Edit application settings" : "Muokkaa sovelluksen asetuksia",
   "territories" : "aluetta",
   "Territory" : "Alue",
   "Territory holders" : "Alueiden omistajat",

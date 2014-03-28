@@ -13,7 +13,10 @@
                   <b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu">
+                  <% if(viewOptions.currentUsername == "admin") { %>
                   <li><a href="/user/update"><i class="fa fa-gears"></i> <%= i18n('My Settings') %></a></li>
+                  <% } %>
+                  <li><a href="/app/update"><i class="fa fa-gears"></i> <%= i18n('App Settings') %></a></li>
                   <li class="divider"></li>
                   <li><a href="/logout"><i class="fa fa-sign-out"></i> <%= i18n('Log out') %></a></li>
                 </ul>
