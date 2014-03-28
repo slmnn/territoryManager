@@ -34,4 +34,13 @@
 
 </div>
 
+<% if(viewOptions.currentUsername == 'admin') { %>
+<div class="container">
+  <ul class="breadcrumb list-inline">
+    <li><a href="/user/create"><i class="fa fa-plus"></i> <%= i18n('Create new user account') %></a><span class="divider"></span></li>
+    <li><a href="/user/destroy"><i class="fa fa-trash-o"></i> <%= i18n('Remove user account') %></a><span class="divider"></span></li>
+  </ul>
+</div>
+<% } %>
+
 <%- partial('../partials/footer')%>
