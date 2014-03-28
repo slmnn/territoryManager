@@ -214,6 +214,9 @@ module.exports = {
     var possibleLetters = figureOutPossibleLetters();
     pageOptions.defaultHolderName = sails.config.default_territory_holder;
     pageOptions.breadcrumbs = [{name : 'Territories', link : '/territory'}, {name : request.params.id, link: '/territory/' + request.params.id.charAt(0) + '/' + request.params.id.substring(1)}, {name : 'Edit', link: null}];
+    if(!request.user || request.user[0].type == "restricted") {
+      return response.send("Forbidden", 403);
+    }  
     if(request.method == 'GET') {
       Territory.findOne({'territoryCode' : request.params.id})
       .exec(function(err, t) {
