@@ -822,34 +822,71 @@ module.exports = {
         average_holding_time = average_holding_time / ( t.length - available_count );
       not_covered_count -= not_covered_bp_count;
       total_count -= (phone_count + business_count);
-      Stats.create({
-        statistic_date : new Date(),
-        average_covered_time : average_covered_time,
-        average_holding_time : average_holding_time,
-        total_count : total_count,
-        not_covered_count : not_covered_count,
-        phone_count : phone_count,
-        business_count : business_count,
-        not_covered_bp_count : not_covered_bp_count,
-        available_count : available_count
-      }).done(function(err, s) {
-        Stats.find().exec(function(err, all_stats) {
-          if(request.wantsJSON) {
-            return response.json(all_stats);
-          }
-          return response.view({
-            viewOptions : pageOptions,
-            all_stats : all_stats,
-            average_covered : formDaysMonthsYearsObject(average_covered_time),
-            average_holding : formDaysMonthsYearsObject(average_holding_time),
-            count : total_count,
-            available_count : available_count,
-            phone_count : phone_count,
-            business_count : business_count,
-            not_covered_bp_count : not_covered_bp_count,
-            not_covered_count : not_covered_count
+      App.find().exec(function(err, a) {
+        if(err || a.length == 0) return response.send("error", 500);
+        var now = new Date();
+        var msInDay = 24*60*60*1000;        
+        if(a[0].lastStats == null) {
+          var lastTime = new Date(now.getTime() - msInDay - 1);
+        } else {
+          var lastTime = new Date(a[0].lastStats);
+        }
+        if(now.getTime() - lastTime.getTime() > msInDay) {
+          a[0].lastStats = now;
+          a[0].save(function(err) {
+            if(err) return response.send("error", 500);
+            Stats.create({
+              statistic_date : new Date(),
+              average_covered_time : average_covered_time,
+              average_holding_time : average_holding_time,
+              total_count : total_count,
+              not_covered_count : not_covered_count,
+              phone_count : phone_count,
+              business_count : business_count,
+              not_covered_bp_count : not_covered_bp_count,
+              available_count : available_count
+            }).done(function(err, s) {
+              if(err) return response.send("error", 500);
+              Stats.find().exec(function(err, all_stats) {
+                if(err) return response.send("error", 500);
+                if(request.wantsJSON) {
+                  return response.json(all_stats);
+                }
+                return response.view({
+                  viewOptions : pageOptions,
+                  all_stats : all_stats,
+                  average_covered : formDaysMonthsYearsObject(average_covered_time),
+                  average_holding : formDaysMonthsYearsObject(average_holding_time),
+                  count : total_count,
+                  available_count : available_count,
+                  phone_count : phone_count,
+                  business_count : business_count,
+                  not_covered_bp_count : not_covered_bp_count,
+                  not_covered_count : not_covered_count
+                });
+              });
+            });            
+          })
+        } else {
+          Stats.find().exec(function(err, all_stats) {
+            if(err) return response.send("error", 500);
+            if(request.wantsJSON) {
+              return response.json(all_stats);
+            }
+            return response.view({
+              viewOptions : pageOptions,
+              all_stats : all_stats,
+              average_covered : formDaysMonthsYearsObject(average_covered_time),
+              average_holding : formDaysMonthsYearsObject(average_holding_time),
+              count : total_count,
+              available_count : available_count,
+              phone_count : phone_count,
+              business_count : business_count,
+              not_covered_bp_count : not_covered_bp_count,
+              not_covered_count : not_covered_count
+            });
           });
-        });
+        }
       });
     });
   },
