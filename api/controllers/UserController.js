@@ -46,7 +46,7 @@ module.exports = {
 						App.create({
 							backupInterval : 7,
 							lastBackup : new Date(),
-							backupEmail : notificationEmail_sender_address,
+							backupEmail : sails.config.notificationEmail_sender_address,
 							lastStats : undefined
 						}).done(function(err, a) {
 							return res.redirect('/login');
