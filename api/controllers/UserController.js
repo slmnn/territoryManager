@@ -43,7 +43,14 @@ module.exports = {
 						}
 					).done(function(err, u){
 						if(err) return res.send(err, 500);
-						return res.redirect('/login');
+						App.create({
+							backupInterval : 7,
+							lastBackup : new Date(),
+							backupEmail : notificationEmail_sender_address,
+							lastStats : undefined
+						}).done(function(err, a) {
+							return res.redirect('/login');
+						});
 					});
 				}
 			});

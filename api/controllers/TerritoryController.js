@@ -347,75 +347,150 @@ module.exports = {
       message = "";
     }
 
-  	Territory.find(filter).sort('territoryLetter').sort('territoryNumber')
-    .exec(function(err, all) {
-      Holder.find().exec(function(err, h){
-        var t_with_names = convertHolderIDtoName(all, h);
-  	  	if(request.wantsJSON) {
-  	  		return response.json(all, 200);
-  	  	} else {
-          var out_t = [];
-          if(request.query.taken_days_ago) {
-            for(var i = 0; i < t_with_names.length; i++) {
-              if(oldDate.getTime() > new Date(t_with_names[i].taken).getTime()) {
-                out_t.push(t_with_names[i]);
-              }
-            }
+    // TODO async.series
+    async.series([
+      function(cb) {
+        App.find().exec(function(err, a) {
+          if(err || a.length == 0) cb("error");
+          var a = a[0];
+          var lastBackup = new Date(a.lastBackup);
+          var now = new Date();
+          pageOptions.suggestBackup = false;
+          if(now.getTime() - lastBackup.getTime() > a.backupInterval * 24 * 60 * 60 * 1000) {
+            pageOptions.suggestBackup = true;
+          }
+          cb();
+        })
+      }
+    ], function() {
+      Territory.find(filter).sort('territoryLetter').sort('territoryNumber')
+      .exec(function(err, all) {
+        Holder.find().exec(function(err, h){
+          var t_with_names = convertHolderIDtoName(all, h);
+          if(request.wantsJSON) {
+            return response.json(all, 200);
           } else {
-            out_t = t_with_names;
-          }
-          var possibleLetters = figureOutPossibleLetters();
-          var only_available_letters = [];
-          for(var i = 0; i < possibleLetters.length; i++) {
-            for(var j = 0; j < out_t.length; j++) {
-              if(possibleLetters[i] == out_t[j].territoryLetter) {
-                only_available_letters.push(possibleLetters[i]);
-                break;
-              }
-            }
-          }
-          Territory.find().exec(function(err, t_all) {
-            var new_territory_taken_emails = 0;
-            var not_covered_territory_emails = 0;
-            var now = new Date();
-            now = now.getTime();
-            var not_covered_limit = now - (1000*60*60*24*sails.config.limit_for_rarely_covered_territory);
-            for(var i = 0; i < t_all.length; i++) {
-              if(t_all[i].notificationEmailDate && t_all[i].holder != sails.config.default_territory_holder_id) {
-                var reallyTaken = new Date(t_all[i].reallyTaken);
-                reallyTaken = reallyTaken.getTime();
-                var last_email_sent = new Date(t_all[i].notificationEmailDate);
-                last_email_sent = last_email_sent.getTime();
-                if(last_email_sent < reallyTaken) {
-                  new_territory_taken_emails++;
-                } 
-                var taken = new Date(t_all[i].taken);
-                taken = taken.getTime();
-                if(not_covered_limit > taken && last_email_sent < (now - 30*1000*60*60*24)) {
-                  not_covered_territory_emails++;
+            var out_t = [];
+            if(request.query.taken_days_ago) {
+              for(var i = 0; i < t_with_names.length; i++) {
+                if(oldDate.getTime() > new Date(t_with_names[i].taken).getTime()) {
+                  out_t.push(t_with_names[i]);
                 }
-              } else if(!t_all[i].notificationEmailDate && t_all[i].holder != sails.config.default_territory_holder_id) {
-                new_territory_taken_emails++;
+              }
+            } else {
+              out_t = t_with_names;
+            }
+            var possibleLetters = figureOutPossibleLetters();
+            var only_available_letters = [];
+            for(var i = 0; i < possibleLetters.length; i++) {
+              for(var j = 0; j < out_t.length; j++) {
+                if(possibleLetters[i] == out_t[j].territoryLetter) {
+                  only_available_letters.push(possibleLetters[i]);
+                  break;
+                }
               }
             }
+            Territory.find().exec(function(err, t_all) {
+              var new_territory_taken_emails = 0;
+              var not_covered_territory_emails = 0;
+              var now = new Date();
+              now = now.getTime();
+              var not_covered_limit = now - (1000*60*60*24*sails.config.limit_for_rarely_covered_territory);
+              for(var i = 0; i < t_all.length; i++) {
+                if(t_all[i].notificationEmailDate && t_all[i].holder != sails.config.default_territory_holder_id) {
+                  var reallyTaken = new Date(t_all[i].reallyTaken);
+                  reallyTaken = reallyTaken.getTime();
+                  var last_email_sent = new Date(t_all[i].notificationEmailDate);
+                  last_email_sent = last_email_sent.getTime();
+                  if(last_email_sent < reallyTaken) {
+                    new_territory_taken_emails++;
+                  } 
+                  var taken = new Date(t_all[i].taken);
+                  taken = taken.getTime();
+                  if(not_covered_limit > taken && last_email_sent < (now - 30*1000*60*60*24)) {
+                    not_covered_territory_emails++;
+                  }
+                } else if(!t_all[i].notificationEmailDate && t_all[i].holder != sails.config.default_territory_holder_id) {
+                  new_territory_taken_emails++;
+                }
+              }
 
-            Territory.count(function(err, count_all) {
-              return response.view({
-                viewOptions: pageOptions,
-                allLetters : possibleLetters,
-                availableLetters : only_available_letters,
-                totalCount : count_all,
-                territoryTakenNotificationCount : new_territory_taken_emails,
-                territoryNotCoveredNotificationCount : not_covered_territory_emails,
-                territories : out_t,
-                filters : appliedFilters,
-                actionResult : message
+              Territory.count(function(err, count_all) {
+                return response.view({
+                  viewOptions: pageOptions,
+                  allLetters : possibleLetters,
+                  availableLetters : only_available_letters,
+                  totalCount : count_all,
+                  territoryTakenNotificationCount : new_territory_taken_emails,
+                  territoryNotCoveredNotificationCount : not_covered_territory_emails,
+                  territories : out_t,
+                  filters : appliedFilters,
+                  actionResult : message
+                });
               });
             });
-          });
-  	  	}
+          }
+        });
       });
-  	});
+    });
+  },
+
+  backupTerritoryData : function(request, response) {
+    // create reusable transport method (opens pool of SMTP connections)
+    var smtpTransport = nodemailer.createTransport("SMTP",{
+        service: "Gmail",
+        auth: {
+          user: sails.config.smtp_username,
+          pass: sails.config.smtp_password
+        }
+    });
+    var all_territories, all_holders, backup_email;
+    var now = new Date();
+    async.parallel([
+      function(cb) {
+        App.find().exec(function(err, a) {
+          if(err || a.length == 0) cb("error");
+          backup_email = a[0].backupEmail;
+          a[0].lastBackup = now;
+          a[0].save(cb)
+        });       
+      }, function(cb) {
+        Territory.find().exec(function(err, all_t) {
+          if(err) cb("error");
+          all_territories = all_t;
+          cb();
+        })
+      }, function(cb) {
+        Holder.find().exec(function(err, all_h) {
+          if(err) cb("error");
+          all_holders = all_h;
+          cb();
+        })
+      }
+    ], function(err) {
+      if(err) {
+        smtpTransport.close();
+        return response.send("Backup failed", 500);
+      }
+      var mail = {
+        from: sails.config.smtp_username,
+        to: backup_email,
+        subject: "Territory Manager Backup " + now,
+        text: "\n\n------- TERRITORIES --------\n\n" +
+        JSON.stringify(all_territories) + 
+        "\n\n------- HOLDERS ------------\n\n" +
+        JSON.stringify(all_holders),
+      }
+      smtpTransport.sendMail(mail, function(error, res){
+        if(error){
+          console.log(error);
+        }else{
+          smtpTransport.close();
+          var next = typeof request.query.next != 'undefined' ? request.query.next : '/territory';
+          return response.redirect(next);
+        }
+      });      
+    });
   },
 
   sendNotificationEmails : function(request, response) {

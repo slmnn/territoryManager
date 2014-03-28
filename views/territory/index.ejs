@@ -6,50 +6,56 @@
   </div>
 </div>-->
 <div class="container">
-    <% notif_count = territoryTakenNotificationCount + territoryNotCoveredNotificationCount; %>
-    <% if (notif_count > 0) { %>
-      <div class="alert alert-info">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <h4><i class="fa fa-envelope"></i> <%= i18n('Email notifications') %>
-          <!--<i class="icon-question-sign" rel="tooltip" data-placement="bottom" title="<%= i18n('Email notifications remind of taken and not covered territories.') %>"></i>--></h4>
-        
-        <% if (notif_count > 0 && notif_count < 6) { %>
-          <span class="badge badge-info">
-        <% } else if (notif_count > 5 && notif_count < 11) { %>
-          <span class="badge badge-warning">
-        <% } else if (notif_count > 10) { %>
-          <span class="badge badge-important">
-        <% } %>
-        <%= notif_count %></span> 
-        <% if(notif_count == 1) { %><%= i18n('notification is ready to be sent') %>.<% } %>
-        <% if(notif_count > 1) { %><%= i18n('notifications are ready to be sent') %>.<% } %>
-        <a class="btn btn-mini btn-primary" href="territory/actions/sendemails"><%= i18n('Send now') %></a>
-      </div>
-    <% } %>
+  <% if (viewOptions.suggestBackup == true) { %>
+    <div class="alert alert-error">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <%= i18n('It has been a while since you last backed up territory data.') %>
+      <a class="btn btn-mini btn-danger" href="/territory/actions/backup"><%= i18n('Backup now') %></a>
+    </div>
+  <% } %>
+  <% notif_count = territoryTakenNotificationCount + territoryNotCoveredNotificationCount; %>
+  <% if (notif_count > 0) { %>
+    <div class="alert alert-info">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <h4><i class="fa fa-envelope"></i> <%= i18n('Email notifications') %>
+        <!--<i class="icon-question-sign" rel="tooltip" data-placement="bottom" title="<%= i18n('Email notifications remind of taken and not covered territories.') %>"></i>--></h4>
+      
+      <% if (notif_count > 0 && notif_count < 6) { %>
+        <span class="badge badge-info">
+      <% } else if (notif_count > 5 && notif_count < 11) { %>
+        <span class="badge badge-warning">
+      <% } else if (notif_count > 10) { %>
+        <span class="badge badge-important">
+      <% } %>
+      <%= notif_count %></span> 
+      <% if(notif_count == 1) { %><%= i18n('notification is ready to be sent') %>.<% } %>
+      <% if(notif_count > 1) { %><%= i18n('notifications are ready to be sent') %>.<% } %>
+      <a class="btn btn-mini btn-primary" href="territory/actions/sendemails"><%= i18n('Send now') %></a>
+    </div>
+  <% } %>
+  <% if (actionResult.length > 0) { %>
+    <div class="alert alert-info">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <i class="fa fa-filter"></i>:
+      <% if(filters.indexOf('only_free') != -1) { %>
+        <i class="fa fa-fw fa-home"></i>
+      <% } %>
+      <% if(filters.indexOf('taken_days_ago') != -1) { %>
+        <i class="fa fa-fw fa-warning"></i>
+      <% } %>
+      <% if(filters.indexOf('Business') != -1) { %>
+        <i class="fa fa-fw fa-shopping-cart"></i>
+      <% } %>
+      <% if(filters.indexOf('Phone') != -1) { %>
+        <i class="fa fa-fw fa-phone"></i>
+      <% } %>
+       <%= i18n('Showing') %> <span class="badge badge-info"><%= territories.length %> / <%= totalCount %></span> <%= i18n('territories') %>.
+      <a class="btn btn-mini btn-primary" href="territory"><%= i18n('Show all') %></a>
+    </div>
+  <% } %>
 </div>
 
-<% if (actionResult.length > 0) { %>
-<div class="container">
-  <div class="alert alert-info">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    <i class="fa fa-filter"></i>:
-    <% if(filters.indexOf('only_free') != -1) { %>
-      <i class="fa fa-fw fa-home"></i>
-    <% } %>
-    <% if(filters.indexOf('taken_days_ago') != -1) { %>
-      <i class="fa fa-fw fa-warning"></i>
-    <% } %>
-    <% if(filters.indexOf('Business') != -1) { %>
-      <i class="fa fa-fw fa-shopping-cart"></i>
-    <% } %>
-    <% if(filters.indexOf('Phone') != -1) { %>
-      <i class="fa fa-fw fa-phone"></i>
-    <% } %>
-     <%= i18n('Showing') %> <span class="badge badge-info"><%= territories.length %> / <%= totalCount %></span> <%= i18n('territories') %>.
-    <a class="btn btn-mini btn-primary" href="territory"><%= i18n('Show all') %></a>
-  </div>
-</div>
-<% } %>
+
 
 <div class="container">
 <div class="btn-group pull-right">
