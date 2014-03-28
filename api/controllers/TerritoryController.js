@@ -755,7 +755,6 @@ module.exports = {
             t_with_holder_names[i].holderHistory = [];
             t_with_holder_names[i].holderHistoryWithNames = [];
           }
-          if(t_with_holder_names[i].territoryCode == 'A7') console.log(t_with_holder_names[i],t_with_holder_names[i].holderHistoryWithNames);
         } 
         if(!err && t_with_holder_names.length > 0) {
           if(request.wantsJSON) {
