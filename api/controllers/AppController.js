@@ -23,10 +23,12 @@ module.exports = {
    *    `/app/update`
    */
   update: function (request, response) {
-    
+    if(!request.user || request.user[0].username != "admin") {
+      return response.send("Forbidden", 403);
+    }    
     var pageOptions = {};
     pageOptions.defaultHolderName = sails.config.default_territory_holder;
-    pageOptions.currentUsername = request.user[0].username;
+    pageOptions.currentUsername = request.user[0].username; 
     pageOptions.message = "";
     pageOptions.breadcrumbs = [{name : 'Application settings', link : null}];
     if(request.method == 'GET') {

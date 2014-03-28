@@ -61,24 +61,19 @@ module.exports = {
 
 	create : function (req, res) {
 		pageOptions.breadcrumbs = [{name : 'User management', link : '/user/update'}, {name: 'Create user', link:null}];
+		if(!req.user || req.user[0].username != "admin") {
+			return res.send("Forbidden", 403);
+		} else {
+			pageOptions.currentUsername = req.user[0].username; 
+		}		
 		Holder.find().exec(function(err, h) {
 	    if(req.method == 'GET') {
-				if(!req.user || req.user[0].username != "admin") {
-					return res.send("Forbidden", 403);
-				} else {
-					pageOptions.currentUsername = req.user[0].username; 
-				}
 	      return res.view({
 	        viewOptions : pageOptions,
 	        holders : h,
 	        actionResult : "Please input new user information."
 	      });
 	    } else if(req.method == 'POST') {
-				if(!req.user || req.user[0].username != "admin") {
-					return res.send("Forbidden", 403);
-				} else {
-					pageOptions.currentUsername = req.user[0].username; 
-				}
 				if(req.body.input_password1 !== req.body.input_password2) {
 					console.log("Mismatching Passwords!")
 					return res.view({
