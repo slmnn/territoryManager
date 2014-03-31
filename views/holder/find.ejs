@@ -56,8 +56,7 @@
             (<span style="color:#FF3300; font-weight:bold">
               <%= daysBetween(new Date(t.reallyTaken), new Date()) %>
             </span>)
-          <% } else { %>
-            <%= taken.getFullYear() + '-' + (taken.getMonth()+1) + '-' + taken.getDate() %> (<%= daysBetween(new Date(t.reallyTaken), new Date()) %>)
+          <% } else { %> (<%= daysBetween(new Date(t.reallyTaken), new Date()) %>)
           <% } %>
         </dd>
       </dl>

@@ -15,11 +15,11 @@
             <tr><td colspan="2"><%= i18n(t.holderHistoryWithNames[i][0]) %></td></tr>
             <td class="small">
               <% var d = new Date(t.holderHistoryWithNames[i-1][1]) %>
-              <%= d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate() %>
+              <%= d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate() %>
             </td>
             <td class="small">
               <% var d = new Date(t.holderHistoryWithNames[i][1]) %>
-              <%= d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate() %>
+              <%= d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate() %>
             </td>
           <% } %>
         <% } %>
@@ -29,7 +29,7 @@
           <tr>
             <td class="small">
               <% var d = new Date(t.taken) %>
-              <%= d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate() %>
+              <%= d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate() %>
             </td>
             <td>
               &emsp;&emsp;&emsp;&emsp;
