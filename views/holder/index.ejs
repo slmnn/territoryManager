@@ -64,7 +64,7 @@ var countNotCoveredTerritories = function(holder) {
 	  	<h3><a name="<%= h.name.charAt(0).toUpperCase() %>"></a><%= h.name.charAt(0).toUpperCase() %></h3>
 	  <% } %>
 	  <div class="row">
-	  	<div class="span11 offset1"><b><a href="<%= '/holder/' + h.id %>"><%= h.name %></a></b> <% if(countNotCoveredTerritories(h) > 0) { %><span class="badge badge-important pull-right"><%= countNotCoveredTerritories(h) %></span><% } %><span class="badge badge-info pull-right"><%= countTerritories(h) %></span></div>
+	  	<div class="span11 offset1"><b><a href="<%= '/holder/' + h.id %>"><%= h.name %></a></b> <% if(countNotCoveredTerritories(h) > 0) { %><span class="badge badge-important pull-right"><i class="fa fa-fw fa-warning"></i> <%= countNotCoveredTerritories(h) %></span><% } %><span class="badge badge-info pull-right"><%= countTerritories(h) %></span></div>
 	  </div>
 	  <% }) %>
 	</div>

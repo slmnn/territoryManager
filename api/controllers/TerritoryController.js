@@ -787,9 +787,10 @@ module.exports = {
       var business_count = 0;
       var not_covered_bp_count = 0;
       var now = new Date();
-      var not_covered_limit = now.getTime() - 1000 * 60 * 60 * 24 * sails.config.limit_for_rarely_covered_territory;
+      var not_covered_limit = now.getTime() - (1000 * 60 * 60 * 24 * sails.config.limit_for_rarely_covered_territory);
       for(var i = 0; i < t.length; i++) {
-        var covered;
+        var covered = new Date(t[i].taken);
+        covered = covered.getTime();
         if (typeof t[i].lastCoveredTime != 'undefined' ) {
           average_covered_time += t[i].lastCoveredTime;
           covered_sometime_count++;
