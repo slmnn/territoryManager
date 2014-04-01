@@ -31,6 +31,22 @@ var countTerritories = function(holder) {
   return count;
 }
 
+var countNotCoveredTerritories = function(holder) {
+  var count = 0;
+  var now = new Date();
+  now = now.getTime();
+  var msInDay = 24*60*60*1000;
+  var notCoveredLimit = now - (msInDay * sails.config.limit_for_rarely_covered_territory);
+  for(var i = 0; i < territories.length; i++) {
+    var covered = new Date(territories[i].taken);
+    covered = covered.getTime();
+    if(territories[i].holder == holder.id && notCoveredLimit > covered) {
+      count++;
+    }
+  }
+  return count;
+}
+
 %>
 
 <div class="container">
@@ -48,7 +64,7 @@ var countTerritories = function(holder) {
 	  	<h3><a name="<%= h.name.charAt(0).toUpperCase() %>"></a><%= h.name.charAt(0).toUpperCase() %></h3>
 	  <% } %>
 	  <div class="row">
-	  	<div class="span11 offset1"><b><a href="<%= '/holder/' + h.id %>"><%= h.name %></a></b> <span class="badge badge-info pull-right"><%= countTerritories(h) %></span></div>
+	  	<div class="span11 offset1"><b><a href="<%= '/holder/' + h.id %>"><%= h.name %></a></b> <% if(countNotCoveredTerritories(h) > 0) { %><span class="badge badge-important pull-right"><%= countNotCoveredTerritories(h) %></span><% } %><span class="badge badge-info pull-right"><%= countTerritories(h) %></span></div>
 	  </div>
 	  <% }) %>
 	</div>
