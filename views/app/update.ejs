@@ -10,6 +10,20 @@
 
 			<legend><%= i18n('Edit application settings') %></legend>
 			<div class="control-group">
+			  <label class="control-label" for="input_notCoveredLimit"><%= i18n('Not covered limit (days)') %></label>
+			  <div class="controls">
+			    <input id="input_notCoveredLimit" name="input_notCoveredLimit" type="number" min="1" max="365" class="input-xlarge" value="<%= currentSettings.notCoveredLimit %>"></input>
+			  </div>
+			</div>
+
+			<div class="control-group">
+			  <label class="control-label" for="input_notCoveredWarningEmailLimit"><%= i18n('Email notification limit (days)') %></label>
+			  <div class="controls">
+			    <input id="input_notCoveredWarningEmailLimit" name="input_notCoveredWarningEmailLimit" type="number" min="1" max="365" class="input-xlarge" value="<%= currentSettings.notCoveredWarningEmailLimit %>"></input>
+			  </div>
+			</div>
+
+			<div class="control-group">
 			  <label class="control-label" for="input_interval"><%= i18n('Backup interval (days)') %></label>
 			  <div class="controls">
 			    <input id="input_interval" name="input_interval" type="number" min="1" max="14" class="input-xlarge" value="<%= currentSettings.backupInterval %>"></input>

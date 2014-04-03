@@ -14,7 +14,10 @@ module.exports = {
   	backupInterval : "INTEGER",
   	backupEmail : "string",
 
-  	lastStats : "DATE"
+  	lastStats : "DATE",
+
+  	notCoveredLimit : "INTEGER",
+  	notCoveredWarningEmailLimit : "INTEGER"
     
   }
 

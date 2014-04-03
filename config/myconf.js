@@ -6,7 +6,8 @@ module.exports = {
   default_territory_holder_id : '5310a361156abf701b063329',
   admin_init_password : '2348jhj3hh',
 
-  limit_for_rarely_covered_territory : process.env.LIMIT_RARELY_COVERED, // days
+  limit_for_rarely_covered_territory : process.env.LIMIT_RARELY_COVERED || 365, // days
+  limit_for_email_notification : process.env.LIMIT_EMAIL_NOTIFICATION || 180,
   territory_letters : ['A','E','H','K','L','M','N','V','B','P'],
   territory_types : ['Normal', 'Business', 'Phone'],
 

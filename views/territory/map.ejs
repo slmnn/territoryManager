@@ -16,7 +16,7 @@
 <div class="fullscreen" id="fullscreen_map"></div>
 <div id="over_map">
 	<p></p>
-	<div class="setLimit"><%= i18n('Set limit') %> (<span id="input_range_val">32</span>): <input type="range" name="input_range" id="input_range" min="0" max="365" value="31" onMouseup="setTimeout('refresh();', 2000)" onChange="jQuery('#input_range_val').text(parseInt(jQuery('#input_range').val())+1); " onTouchend="setTimeout('refresh();', 2000)" onChange="jQuery('#input_range_val').text(parseInt(jQuery('#input_range').val())+1); " /></div>
+	<div class="setLimit"><%= i18n('Set limit') %> (<span id="input_range_val"><%= sails.config.limit_for_rarely_covered_territory %></span>): <input type="range" name="input_range" id="input_range" min="0" max="365" value="<%= sails.config.limit_for_rarely_covered_territory %>" onMouseup="setTimeout('refresh();', 2000)" onChange="jQuery('#input_range_val').text(parseInt(jQuery('#input_range').val())+1); " onTouchend="setTimeout('refresh();', 2000)" onChange="jQuery('#input_range_val').text(parseInt(jQuery('#input_range').val())+1); " /></div>
 </div>
 <script type="text/javascript">
 	// configuration

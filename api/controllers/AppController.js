@@ -42,6 +42,10 @@ module.exports = {
       App.find().exec(function(err, a) {
         a[0].backupInterval = request.body.input_interval;
         a[0].backupEmail = request.body.input_email;
+        a[0].notCoveredLimit = request.body.input_notCoveredLimit;
+        a[0].notCoveredWarningEmailLimit = request.body.input_notCoveredWarningEmailLimit;
+        sails.config.limit_for_rarely_covered_territory = request.body.input_notCoveredLimit;
+        sails.config.limit_for_email_notification = request.body.input_notCoveredWarningEmailLimit;
         a[0].save(function(err) {
           if(err) response.send("error", 500);
           pageOptions.message = "Changes saved!";
