@@ -96,7 +96,7 @@
             <% if(letter == t.territoryLetter) { %>
 
             <% var taken = new Date(t.taken); taken = taken.getTime(); var now = new Date(); var not_covered = now.getTime() - (1000 * 60 * 60 * 24 * sails.config.limit_for_rarely_covered_territory); %>
-            <li>
+            <li style="width:28px">
               <a href="<%= '/territory/' + t.territoryLetter + '/' + t.territoryNumber %>">
                 <% if(not_covered > taken) { %> 
                   <span style="color:#FF3300">

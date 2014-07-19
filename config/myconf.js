@@ -8,7 +8,7 @@ module.exports = {
 
   limit_for_rarely_covered_territory : process.env.LIMIT_RARELY_COVERED || 365, // days
   limit_for_email_notification : process.env.LIMIT_EMAIL_NOTIFICATION || 180,
-  territory_letters : ['A','E','H','K','L','M','N','V','B','P'],
+  territory_letters : ['A','E','H','K','L','M','N','S','V','B'],
   territory_types : ['Normal', 'Business', 'Phone'],
 
   smtp_username : process.env.SMTP_USERNAME,

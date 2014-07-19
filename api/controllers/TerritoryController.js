@@ -307,7 +307,7 @@ module.exports = {
           return response.view({
             viewOptions: pageOptions,
             relatedHolder: (request.user[0].holderRelated === true) ? request.user[0].relatedHolder : sails.config.default_territory_holder_id,
-            possibleHolders : possibleHolders,
+            possibleHolders : possibleHolders.sort(function(a,b){if(a.name>b.name)return 1; if(a.name<b.name)return -1; else return 0;}),
             territories : t_with_names
           });      
         })
@@ -633,6 +633,9 @@ module.exports = {
               viewOptions: pageOptions,
               lastLetter : data.territoryLetter,
               availableLetters : possibleLetters,
+              lastNumber : data.territoryNumber,
+              lastLat : data.lat,
+              lastLng : data.lng,
               actionResult : "New Territory (" + data.territoryLetter + data.territoryNumber + ") Created!"
             }); 
           }

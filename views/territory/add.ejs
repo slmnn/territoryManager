@@ -27,7 +27,11 @@
 		<div class="control-group">
 		  <label class="control-label" for="input_number"><%= i18n('Number') %></label>
 		  <div class="controls">
-		    <input id="input_number" name="input_number" type="number" min="1" placeholder="123" class="input-xlarge">
+		  	<% if(typeof lastNumber != 'undefined') { %>
+		    	<input id="input_number" value="<%= (lastNumber+1) %>" name="input_number" type="number" min="1" placeholder="123" class="input-xlarge">
+		    <% } else { %>
+		    	<input id="input_number" name="input_number" type="number" min="1" placeholder="123" class="input-xlarge">
+		    <% } %>
 		  </div>
 		</div>
 
@@ -56,10 +60,18 @@
 				</div>
 				<div class="form-inline">
 			    <label for="input_lat"><%= i18n('Latitude') %>:</label>
-			    <input class="form-control span2" name="input_lat" id="input_lat" type="text" value="" />
+			    <% if(typeof lastLat != 'undefined') { %>
+			    	<input class="form-control span2" name="input_lat" id="input_lat" type="text" value="<%= lastLat %>" />
+			    <% } else { %>
+			    	<input class="form-control span2" name="input_lat" id="input_lat" type="text" value="" />
+			    <% } %>
 
 			    <label for="input_lng"><%= i18n('Longitude') %>:</label>
-			    <input class="form-control span2" name="input_lng" id="input_lng" type="text" value="" />
+			    <% if(typeof lastLng != 'undefined') { %>
+			    	<input class="form-control span2" name="input_lng" id="input_lng" type="text" value="<%= lastLng %>" />
+			    <% } else { %>
+			    	<input class="form-control span2" name="input_lng" id="input_lng" type="text" value="" />
+			    <% } %>
 				</div>
 			</div>
 		</div>

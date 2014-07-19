@@ -154,7 +154,7 @@ module.exports = {
             h.splice(i, 1);
         }
         return response.view({
-          holders : h,
+          holders : h.sort(function(a,b){if(a.name>b.name)return 1; if(a.name<b.name)return -1; else return 0;}),
           viewOptions : pageOptions,
           actionResult : "Please select a holder to be removed. All territories assigned to the holder will be returned to the default holder. If you want to mark territories as covered, it needs to be done manually."
         });

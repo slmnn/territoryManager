@@ -1,4 +1,4 @@
-// After page is fully loaded
+	// After page is fully loaded
 
 
 	// configuration
@@ -38,3 +38,17 @@
 	// adds the marker on the map
 	myMarker.setMap(map);
 
+var setMarker = function() {
+	if(document.getElementById('input_lat').value.length > 0 && 
+		 parseFloat(document.getElementById('input_lat').value) != NaN) {
+		defaultLat = document.getElementById('input_lat').value;
+	}
+	if(document.getElementById('input_lng').value.length > 0 && 
+		 parseFloat(document.getElementById('input_lng').value) != NaN) {
+		defaultLng = document.getElementById('input_lng').value;
+	}
+	myMarker.position = new google.maps.LatLng(defaultLat, defaultLng);
+	map.setCenter(myMarker.position);
+}
+
+setTimeout(1000,'setMarker();');
