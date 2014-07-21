@@ -7,7 +7,7 @@
 	}
 	#over_map { 
 		position: absolute; background-color: white; top: 10px; left: 10px; z-index: 99; 
-		font-size: 2em; padding: 5px;
+		font-size: 1em; padding: 5px;
 	}
 	.setLimit {
 		font-size: 0.8em;
@@ -68,12 +68,15 @@
 		  	var d = new Date(this.taken);
 		  	var d_ms = d.getTime();
 		  	var z = 1;
-		  	var image = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
-		  	if(oldDate_ms > d_ms && d_ms > very_oldDate_ms) {
+		  	var is_default = this.holder_is_default;
+		  	var image = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+		  	if(is_default) { image = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'; }
+		  	if(oldDate_ms > d_ms && d_ms > very_oldDate_ms && is_default) {
 		  		image = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png';
 		  		z = 2;
 		  	} else if (d_ms < very_oldDate_ms) {
-		  		image = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
+		  		image = 'http://maps.google.com/mapfiles/ms/icons/orange-dot.png';
+		  		if(is_default) { image = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'; }
 		  		old_count++;
 		  		z = 3;
 		  	}

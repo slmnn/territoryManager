@@ -708,6 +708,7 @@ module.exports = {
       var anon_t = [];
       for(var i = 0; i < t.length; i++) {
         var new_t = t[i];
+        new_t.holder_is_default = (t[i].holder == sails.config.default_territory_holder_id ? true : false);
         new_t.holder = undefined;
         new_t.description = undefined;
         new_t.history = undefined;
