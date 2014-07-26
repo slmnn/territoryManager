@@ -57,7 +57,7 @@
 		// adds the marker on the map
 		myMarker.setMap(map);
 
-		jQuery.getJSON( "/", function( data ) {
+		jQuery.getJSON( "/mapdata", function( data ) {
 			var oldDate = new Date();
 			var very_oldDate_ms = oldDate.getTime() - ( 1000 * 60 * 60 * 24 * (parseInt(jQuery('#input_range').val()) + 1) );
 			var oldDate_ms = very_oldDate_ms + 1000 * 60 * 60 * 24 * 30;

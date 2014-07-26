@@ -19,7 +19,8 @@ module.exports.policies = {
   '*': "authenticated",
 
   TerritoryController: {
-    "map": true
+    "map": true,
+    "mapdata" : true
   },
   UserController: {
     "create": true,

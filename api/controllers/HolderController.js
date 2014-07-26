@@ -68,7 +68,7 @@ var createNewHolder = function(in_name, in_email, in_emailValid, callback) {
 module.exports = {
     
   create : function(request, response) {
-    pageOptions.breadcrumbs = [{name : 'Territory holders', link : '/holder'}, {name : 'Create Holder', link : null}];
+    pageOptions.breadcrumbs = [{name : 'App Settings', link : '/app/update'}, {name : 'Create Holder', link : null}];
     pageOptions.currentUsername = request.user[0].username; 
     if(request.method == 'GET') {
       return response.view({
@@ -141,7 +141,7 @@ module.exports = {
   },
 
   destroy : function(request, response) {
-    pageOptions.breadcrumbs = [{name : 'Territory holders', link : '/holder'}, {name : 'Remove Holder', link : null}];
+    pageOptions.breadcrumbs = [{name : 'App Settings', link : '/app/update'}, {name : 'Remove Holder', link : null}];
     pageOptions.currentUsername = request.user[0].username; 
     console.log(request.user[0].username);
     if(!request.user || request.user[0].username != 'admin') {

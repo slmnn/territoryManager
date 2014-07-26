@@ -37,6 +37,7 @@ module.exports.routes = {
   // },
 
   'get /' : 'TerritoryController.map',
+  'get /mapdata' : 'TerritoryController.mapdata',
   'get /login': 'AuthController.login',
   'post /login': 'AuthController.process',
   'get /logout': 'AuthController.logout',
@@ -49,6 +50,7 @@ module.exports.routes = {
 
   'get /holder/name/:name' : 'HolderContoller.findName',
   'get /territory/s13' : 'TerritoryController.s13',
+  'get /territory/reset' : 'TerritoryController.reset',
   'get /territory/stats' : 'TerritoryController.stats',
   'get /territory/destroy' : 'TerritoryController.destroy',
   'post /territory/destroy' : 'TerritoryController.destroy',

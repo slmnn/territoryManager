@@ -715,9 +715,6 @@ module.exports = {
         anon_t.push(new_t);
       }
       if(!err && anon_t.length > 0) {
-        if(request.wantsJSON) {
-          return response.json(anon_t);
-        }
         return response.view({
           viewOptions : pageOptions,
           availableLetters : possibleLetters,
@@ -727,6 +724,57 @@ module.exports = {
         return response.send("Error: " + err, 500)
       }
     });
+  },
+
+  mapdata : function(request, response) {
+    pageOptions.defaultHolderName = sails.config.default_territory_holder;
+    var possibleLetters = figureOutPossibleLetters();
+    var taken_days_ago = request.query.taken_days_ago;
+    var available = request.query.only_available;
+    Territory.find()
+    .exec(function(err, t) {
+      // Remove sensitive information
+      var anon_t = [];
+      for(var i = 0; i < t.length; i++) {
+        var new_t = t[i];
+        new_t.holder_is_default = (t[i].holder == sails.config.default_territory_holder_id ? true : false);
+        new_t.holder = undefined;
+        new_t.description = undefined;
+        new_t.history = undefined;
+        anon_t.push(new_t);
+      }
+      if(!err && anon_t.length > 0) {
+        return response.json(anon_t);
+      } else {
+        return response.send("Error: " + err, 500)
+      }
+    });
+  },
+
+  reset : function(request, response) {
+    if(!request.user || request.user[0].username != "admin") {
+      return response.send("Forbidden", 403);
+    } else {
+      var today = new Date();
+      Territory.update(
+        {},
+        {
+          lastCoveredTime:0,
+          notificationEmailDate: today,
+          taken: today,
+          reallyTaken: today,
+          holderHistory:[],
+          holder: sails.config.default_territory_holder_id
+        }
+      )
+      .exec(function(err, t) {
+        if(!err) {
+          return response.send("All territory data is now reset.", 200);
+        } else {
+          return response.send("Error: " + err, 500)
+        }
+      });
+    }
   },
 
   s13 : function(request, response) {
