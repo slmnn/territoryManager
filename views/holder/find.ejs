@@ -50,8 +50,8 @@
         </dd>
         <dt><%= i18n('This holder since') %></dt>
         <dd>
-          <%= taken.getFullYear() + '-' + (taken.getMonth()+1) + '-' + taken.getDate() %>
           <% var taken = new Date(t.reallyTaken); %> 
+          <%= taken.getFullYear() + '-' + (taken.getMonth()+1) + '-' + taken.getDate() %>
           <% if(taken < not_returned) { %>
             (<span style="color:#FF3300; font-weight:bold">
               <%= daysBetween(new Date(t.reallyTaken), new Date()) %>
