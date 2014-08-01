@@ -221,14 +221,20 @@ module.exports = {
       .sort('territoryLetter').sort('territoryNumber')
   		.exec(function(err, t) {
         var only_holders_with_territories = [];
+        var holder_first_letters = [];
         for(var i = 0; i < h.length; i++) {
           for(var j = 0; j < t.length; j++) {
             if(t[j].holder == h[i].id) {
               only_holders_with_territories.push(h[i]);
+              holder_first_letters.push(h[i].name.charAt(0).toUpperCase())
               break;
             }
           }
         }
+        var unique_letters = holder_first_letters.filter(function(elem, pos, self) {
+            return self.indexOf(elem) == pos;
+        });
+        pageOptions.unique_letters = unique_letters.sort();
         var onlyRelatedHolders = [];
         if(request.user[0].holderRelated && request.user[0].holderRelated === true) {
           for(var i = 0; i < only_holders_with_territories.length; i++) {
