@@ -679,11 +679,19 @@ module.exports = {
                 t.holderHistory = [];
               }
               var now = new Date();
-              t.holderHistory.push([t.holder, now]);
+              var lastCoveredTime_old = t.lastCoveredTime;
               if(t.holder != sails.config.default_territory_holder_id) {
                 var taken = new Date(t.taken);
                 t.lastCoveredTime = now.getTime() - taken.getTime();
               }
+              // If the last covered time was less than 15 min, we will remove the
+              // data from territory history
+              if(t.holderHistory.length >= 2 && t.lastCoveredTime < 1000*60*15) {
+                console.log("Mistake holder change detected: " + t.territoryCode);
+                t.lastCoveredTime = lastCoveredTime_old;
+                t.holderHistory.splice(t.holderHistory.length-1,1);
+              }
+              t.holderHistory.push([t.holder, now]);
               t.holder = h.id;
               t.taken = new Date();
               t.save(function(err) {
