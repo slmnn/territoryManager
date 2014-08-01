@@ -686,7 +686,7 @@ module.exports = {
               }
               // If the last covered time was less than 15 min, we will remove the
               // data from territory history
-              if(t.holderHistory.length >= 1 && t.lastCoveredTime < 1000*60*15) {
+              if(t.holderHistory.length >= 1 && t.lastCoveredTime < 1000*60*15 && t.lastCoveredTime != 0) {
                 console.log("Mistake holder change detected: " + t.territoryCode);
                 t.lastCoveredTime = lastCoveredTime_old;
                 t.holderHistory.splice(t.holderHistory.length-1,1);
