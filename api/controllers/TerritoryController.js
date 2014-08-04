@@ -155,6 +155,13 @@ var createEmailObject = function(t, t_all, h_all, template) {
       current_holder = h_all[j];
     }
   }
+  if(t.holder == sails.config.default_territory_holder_id && t.holderHistory.length > 0) {
+    for(var j = 0; j < h_all.length; j++) {
+      if(h_all[j].id == t.holderHistory[t.holderHistory.length-1][0] && h_all[j].emailValid === true) {
+        current_holder = h_all[j];
+      }
+    }
+  }
   if(typeof current_holder != "undefined") {
     var list_of_territories = [];
     for(var k = 0; k < t_all.length; k++) {
@@ -396,17 +403,21 @@ module.exports = {
             Territory.find().exec(function(err, t_all) {
               var new_territory_taken_emails = 0;
               var not_covered_territory_emails = 0;
+              var territory_removed_emails = 0;
               var now = new Date();
               now = now.getTime();
               var not_covered_limit = now - (1000*60*60*24*sails.config.limit_for_rarely_covered_territory);
               for(var i = 0; i < t_all.length; i++) {
-                if(t_all[i].notificationEmailDate && t_all[i].holder != sails.config.default_territory_holder_id) {
+                if(t_all[i].notificationEmailDate) {
                   var reallyTaken = new Date(t_all[i].reallyTaken);
                   reallyTaken = reallyTaken.getTime();
                   var last_email_sent = new Date(t_all[i].notificationEmailDate);
                   last_email_sent = last_email_sent.getTime();
-                  if(last_email_sent < reallyTaken) {
+                  if(last_email_sent < reallyTaken && t_all[i].holder != sails.config.default_territory_holder_id) {
                     new_territory_taken_emails++;
+                  } 
+                  if(last_email_sent < reallyTaken && t_all[i].holder == sails.config.default_territory_holder_id) {
+                    territory_removed_emails++;
                   } 
                   var taken = new Date(t_all[i].taken);
                   taken = taken.getTime();
@@ -426,6 +437,7 @@ module.exports = {
                   totalCount : count_all,
                   territoryTakenNotificationCount : new_territory_taken_emails,
                   territoryNotCoveredNotificationCount : not_covered_territory_emails,
+                  territoryRemovedNotificationCount : territory_removed_emails,
                   territories : out_t,
                   filters : appliedFilters,
                   actionResult : message
@@ -509,6 +521,7 @@ module.exports = {
     Territory.find().exec(function(err, t_all) {
       Holder.find().exec(function(err, h_all) {
         var new_territory_taken_emails = 0;
+        var territory_removed_emails = 0;
         var not_covered_territory_emails = 0;
         var now = new Date();
         now = now.getTime();
@@ -516,24 +529,35 @@ module.exports = {
         var t_to_be_updated = [];
         var not_covered_limit = now - (1000*60*60*24*sails.config.limit_for_email_notification);
         for(var i = 0; i < t_all.length; i++) {
-          if(t_all[i].notificationEmailDate && t_all[i].holder != sails.config.default_territory_holder_id) {
+          if(t_all[i].notificationEmailDate ) {
             var reallyTaken = new Date(t_all[i].reallyTaken);
             reallyTaken = reallyTaken.getTime();
             var last_email_sent = new Date(t_all[i].notificationEmailDate);
             last_email_sent = last_email_sent.getTime();
-            if(last_email_sent < reallyTaken) {
+            // holder is not default, and email is not sent
+            if(last_email_sent < reallyTaken && t_all[i].holder != sails.config.default_territory_holder_id) {
               new_territory_taken_emails++;
-              t_to_be_updated.push(t_all[i])
+              t_to_be_updated.push(t_all[i]);
               var mail = createEmailObject(t_all[i], t_all, h_all, sails.config.notificationEmail_new_territory);
               if(typeof mail != 'undefined') {
                 mails.push(mail);
               }
             } 
+            // holder is now default and email is not sent
+            if(last_email_sent < reallyTaken && t_all[i].holder == sails.config.default_territory_holder_id) {
+              territory_removed_emails++;
+              t_to_be_updated.push(t_all[i]);
+              var mail = createEmailObject(t_all[i], t_all, h_all, sails.config.notificationEmail_removed_territory);
+              if(typeof mail != 'undefined') {
+                mails.push(mail);
+              }
+            }
+            // not_covered_limit is expired and email is not sent
             var taken = new Date(t_all[i].taken);
             taken = taken.getTime();
-            if(not_covered_limit > taken && last_email_sent < (now - 30*1000*60*60*24)) {
+            if(not_covered_limit > taken && last_email_sent < (now - 30*1000*60*60*24) && t_all[i].holder != sails.config.default_territory_holder_id) {
               not_covered_territory_emails++;
-              t_to_be_updated.push(t_all[i])
+              t_to_be_updated.push(t_all[i]);
               var mail = createEmailObject(t_all[i], t_all, h_all, sails.config.notificationEmail_notCovered_territory);
               if(typeof mail != 'undefined') {
                 mails.push(mail);
@@ -689,7 +713,7 @@ module.exports = {
               if(t.holderHistory.length >= 1 && t.lastCoveredTime < 1000*60*15 && t.lastCoveredTime != 0) {
                 console.log("Mistake holder change detected: " + t.territoryCode);
                 t.lastCoveredTime = lastCoveredTime_old;
-                t.holderHistory.splice(t.holderHistory.length-1,1);
+                t.holderHistory.splice(-1,1);
               }
               t.holderHistory.push([t.holder, now]);
               t.holder = h.id;
@@ -851,7 +875,7 @@ module.exports = {
       for(var i = 0; i < t.length; i++) {
         var covered = new Date(t[i].taken);
         covered = covered.getTime();
-        if (typeof t[i].lastCoveredTime != 'undefined' ) {
+        if (typeof t[i].lastCoveredTime != 'undefined' && t[i].lastCoveredTime != 0) {
           average_covered_time += t[i].lastCoveredTime;
           covered_sometime_count++;
         } 

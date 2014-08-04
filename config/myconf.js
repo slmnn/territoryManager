@@ -35,6 +35,25 @@ _listAllTerritoryCodes\
 <br>\
 Terveisin,<br>\
 Tampere-Messukylä, alueveljet'
+  },  
+  notificationEmail_removed_territory : {
+    title: 'Olet luovuttanut pois alueen _territoryCode',
+    body: 'Hei _holderName, <br> \
+<br> \
+Olet luovuttanut pois alueen: <br>\
+<hr> \
+<b>_territoryCode</b>\
+<pre>_territoryDetails</pre>\
+<a href="http://maps.google.com/?q=_territoryLat,_territoryLng">Näytä alue kartalla</a><br>\
+<hr>\
+<br> \
+<br> \
+Sinulla on nyt seuraavat alueet: <br>\
+_listAllTerritoryCodes\
+<br>\
+<br>\
+Terveisin,<br>\
+Tampere-Messukylä, alueveljet'
   },
 
   notificationEmail_notCovered_territory : {
