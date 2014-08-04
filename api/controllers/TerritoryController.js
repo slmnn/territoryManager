@@ -24,6 +24,11 @@ var pageOptions = {
   appliedFilters : []
 };
 
+var createTrace = function(in_username, in_description) {
+  var now = new Date();
+  return {username: in_username, description: in_description, trace_date: now}
+}
+
 var formDaysMonthsYearsObject = function(in_millisecs) {
   var millisecondsPerDay = 1000 * 60 * 60 * 24;
     var days = in_millisecs / millisecondsPerDay;
@@ -481,6 +486,12 @@ module.exports = {
           all_holders = all_h;
           cb();
         })
+      }, function(cb) {
+        Trace.create(createTrace(request.user[0].username, "New email backup created."))
+        .exec(function(err, trace) { 
+          if(err) cb("error" + err);
+          cb();
+        });
       }
     ], function(err) {
       if(err) {
@@ -718,10 +729,23 @@ module.exports = {
               t.holderHistory.push([t.holder, now]);
               t.holder = h.id;
               t.taken = new Date();
-              t.save(function(err) {
+              async.parallel([
+                function(cb) {
+                  t.save(function(err) {
+                    if(err) cb(err);
+                    cb();
+                  });
+                }, function(cb) {
+                  Trace.create(createTrace(request.user[0].username, "Territory " + t.territoryCode + " assigned to " + request.body.input_holder))
+                  .exec(function(err, trace) { 
+                    if(err) cb("error" + err);
+                    cb();
+                  });
+                }
+              ], function(err) {
                 if(err) return response.send(err, 500);
                 return response.redirect('territory/' + request.body.input_letter + '/' + request.body.input_number);
-              });            
+              })
             });
           }
         });

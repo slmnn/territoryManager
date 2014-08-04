@@ -1,0 +1,15 @@
+<%- partial('../partials/header')%>
+
+<div class="container">
+  <div class="page-header"><%= i18n(actionResult) %></div>
+
+  <table class="table table-striped table-hover">
+    <tr><th>Date</th><th>User</th><th>Description</th></tr>
+    <% _.each(traces, function (t) { %>
+      <tr><td><% var d = new Date(t.trace_date) %><%= d.toDateString() + ' @ ' + d.toLocaleTimeString() %></td><td><%= t.username %></td><td><%= t.description %></td></tr>
+    <% }); %>
+  </table>
+
+</div>
+
+<%- partial('../partials/footer') %>
