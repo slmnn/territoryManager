@@ -34,7 +34,7 @@ module.exports = {
   process: function(req,res){
     passport.authenticate('local', function(err, user, info){
       if ((err) || (!user)) {
-        console.log("FAILED LOGIN ATTEMPT!!!");
+        console.log("FAILED LOGIN ATTEMPT!!! IP: " + req.ip);
         return res.redirect('/login');
       }
       req.logIn(user, function(err){
