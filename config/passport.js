@@ -22,7 +22,7 @@ passport.use(new LocalStrategy(
   function(username, password, done) {
     User.findByUsername(username).done(function(err, user) {
       if (err) { console.log(err); return done(null, err); }
-      if (!user || user.length < 1) { 
+      if (!user || !user[0] || user.length < 1) { 
         Trace.create(common.createTrace('unknown', "Failed log in attempt because of incorrect username ("+ username +")", true))
         .exec(function(err, trace) { 
           return done(null, false, { message: 'Incorrect User'}); 
