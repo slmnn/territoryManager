@@ -23,11 +23,19 @@ passport.use(new LocalStrategy(
     User.findByUsername(username).done(function(err, user) {
       if (err) { console.log(err); return done(null, err); }
       if (!user || user.length < 1) { 
-        return done(null, false, { message: 'Incorrect User'}); 
+        Trace.create(common.createTrace('unknown', "Failed log in attempt because of incorrect username ("+ username +")", true))
+        .exec(function(err, trace) { 
+          return done(null, false, { message: 'Incorrect User'}); 
+        });
       }
       if(process.env.USE_BCRYPT == 'true') {
         bcrypt.compare(password, user[0].password, function(err, res) {
-          if (!res) return done(null, false, { message: 'Invalid Password'});
+          if (!res) {
+            Trace.create(common.createTrace(username, "Failed log in attempt because of wrong password.", true))
+            .exec(function(err, trace) { 
+              return done(null, false, { message: 'Invalid Password'}); 
+            });
+          }
           return done(null, user);
         });
       } else {
@@ -37,10 +45,13 @@ passport.use(new LocalStrategy(
           console.log(err);
           return done(null, false, { message: err});
         }
-        if(sc.encrypt(password) == user[0].password) {
+        if(user[0] && sc.encrypt(password) == user[0].password) {
           return done(null, user);
         } else {
-          return done(null, false, { message: 'Invalid Password'});
+          Trace.create(common.createTrace(username, "Failed log in attempt because of wrong password.", true))
+          .exec(function(err, trace) { 
+            return done(null, false, { message: 'Invalid Password'}); 
+          });
         }
       }
     });
