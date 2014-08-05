@@ -123,6 +123,7 @@
   <ul class="breadcrumb list-inline">
     <li><a href="/"><i class="fa fa-map-marker"></i> <%= i18n('Territories on a map') %></a><span class="divider"></span></li>
     <li><a href="/territory/stats"><i class="fa fa-bar-chart-o"></i> <%= i18n('Stats') %></a><span class="divider"></span></li> 
+    <li><a href="/trace/find?limit=50"><i class="fa fa-stethoscope"></i> <%= i18n('Traces') %></a><span class="divider"></span></li> 
     <li><a href="/territory/s13"><i class="fa fa-columns"></i> <%= i18n('S-13') %></a><span class="divider"></span></li>
     <% if(viewOptions.currentUserType && viewOptions.currentUserType != 'restricted') { %>
       <li><a href="/territory/actions/add"><i class="fa fa-plus"></i> <%= i18n('Add new territory') %></a><span class="divider"></span></li>
