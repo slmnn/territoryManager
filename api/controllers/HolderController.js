@@ -93,10 +93,13 @@ module.exports = {
               actionResult : "Sorry, something went wrong: " + data
             });            
           } else {
-            return response.view({
-              viewOptions : pageOptions,
-              actionResult : "New Holder Created (" + data.name + ")!"
-            }); 
+            Trace.create(common.createTrace(request.user[0].username, "Created holder: " + data.name, false))
+            .exec(function(err, trace) { 
+              return response.view({
+                viewOptions : pageOptions,
+                actionResult : "New Holder Created (" + data.name + ")!"
+              }); 
+            });
           }
         });
     }
@@ -134,7 +137,10 @@ module.exports = {
           if(err || !h || h.length == 0) {
             return response.send(err, 500);
           }
-          return response.redirect('holder/' + request.params.id);
+          Trace.create(common.createTrace(request.user[0].username, "Updated holder: " + request.body.input_name, false))
+          .exec(function(err, trace) { 
+            return response.redirect('holder/' + request.params.id);
+          });
         }
       );
     }
@@ -183,8 +189,10 @@ module.exports = {
             }
             Holder.destroy({id:h.id}).done(function(err){
               if(err) return response.send(err, 500);
-              console.log("Removed " + h.name);
-              return response.redirect('/holder/destroy');
+              Trace.create(common.createTrace(request.user[0].username, "Deleted holder: " + h.name, false))
+              .exec(function(err, trace) { 
+                return response.redirect('/holder/destroy');
+              });
             });
           }
         );

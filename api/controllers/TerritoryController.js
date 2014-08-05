@@ -24,11 +24,6 @@ var pageOptions = {
   appliedFilters : []
 };
 
-var createTrace = function(in_username, in_description) {
-  var now = new Date();
-  return {username: in_username, description: in_description, trace_date: now}
-}
-
 var formDaysMonthsYearsObject = function(in_millisecs) {
   var millisecondsPerDay = 1000 * 60 * 60 * 24;
     var days = in_millisecs / millisecondsPerDay;
@@ -487,7 +482,7 @@ module.exports = {
           cb();
         })
       }, function(cb) {
-        Trace.create(createTrace(request.user[0].username, "New email backup created."))
+        Trace.create(common.createTrace(request.user[0].username, "New email backup created."))
         .exec(function(err, trace) { 
           if(err) cb("error" + err);
           cb();
@@ -600,8 +595,11 @@ module.exports = {
             });
           }, function() {
             smtpTransport.close(); // shut down the connection pool, no more messages
-            var next = typeof request.query.next != 'undefined' ? request.query.next : '/territory';
-            return response.redirect(next);
+            Trace.create(common.createTrace(request.user[0].username, "Sent " + mails.length + " email notifications.", false))
+            .exec(function(err, trace) { 
+              var next = typeof request.query.next != 'undefined' ? request.query.next : '/territory';
+              return response.redirect(next);
+            });
           });
         });
       });
@@ -736,7 +734,7 @@ module.exports = {
                     cb();
                   });
                 }, function(cb) {
-                  Trace.create(createTrace(request.user[0].username, "Territory " + t.territoryCode + " assigned to " + request.body.input_holder))
+                  Trace.create(common.createTrace(request.user[0].username, "Territory " + t.territoryCode + " assigned to " + request.body.input_holder))
                   .exec(function(err, trace) { 
                     if(err) cb("error" + err);
                     cb();
@@ -960,17 +958,20 @@ module.exports = {
                 if(request.wantsJSON) {
                   return response.json(all_stats);
                 }
-                return response.view({
-                  viewOptions : pageOptions,
-                  all_stats : all_stats,
-                  average_covered : formDaysMonthsYearsObject(average_covered_time),
-                  average_holding : formDaysMonthsYearsObject(average_holding_time),
-                  count : total_count,
-                  available_count : available_count,
-                  phone_count : phone_count,
-                  business_count : business_count,
-                  not_covered_bp_count : not_covered_bp_count,
-                  not_covered_count : not_covered_count
+                Trace.create(common.createTrace(request.user[0].username, "Checked the statistics, and created new stats for current day."))
+                .exec(function(err, trace) { 
+                  return response.view({
+                    viewOptions : pageOptions,
+                    all_stats : all_stats,
+                    average_covered : formDaysMonthsYearsObject(average_covered_time),
+                    average_holding : formDaysMonthsYearsObject(average_holding_time),
+                    count : total_count,
+                    available_count : available_count,
+                    phone_count : phone_count,
+                    business_count : business_count,
+                    not_covered_bp_count : not_covered_bp_count,
+                    not_covered_count : not_covered_count
+                  });
                 });
               });
             });            
@@ -981,17 +982,20 @@ module.exports = {
             if(request.wantsJSON) {
               return response.json(all_stats);
             }
-            return response.view({
-              viewOptions : pageOptions,
-              all_stats : all_stats,
-              average_covered : formDaysMonthsYearsObject(average_covered_time),
-              average_holding : formDaysMonthsYearsObject(average_holding_time),
-              count : total_count,
-              available_count : available_count,
-              phone_count : phone_count,
-              business_count : business_count,
-              not_covered_bp_count : not_covered_bp_count,
-              not_covered_count : not_covered_count
+            Trace.create(common.createTrace(request.user[0].username, "Checked the statistics."))
+            .exec(function(err, trace) { 
+              return response.view({
+                viewOptions : pageOptions,
+                all_stats : all_stats,
+                average_covered : formDaysMonthsYearsObject(average_covered_time),
+                average_holding : formDaysMonthsYearsObject(average_holding_time),
+                count : total_count,
+                available_count : available_count,
+                phone_count : phone_count,
+                business_count : business_count,
+                not_covered_bp_count : not_covered_bp_count,
+                not_covered_count : not_covered_count
+              });
             });
           });
         }

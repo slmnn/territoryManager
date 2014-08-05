@@ -22,7 +22,11 @@ module.exports = {
   	trace_date: {
   		type: "datetime",
   		required: true
-  	}
+  	},
+
+    only_admin: {
+      type: "boolean"
+    }
 
   }
 };

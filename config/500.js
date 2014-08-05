@@ -71,7 +71,11 @@ module.exports[500] = function serverErrorOccurred(errors, req, res) {
     if (err) { return res.json(result, result.status); }
     
     // Otherwise, if it can be rendered, the `views/500.*` page is rendered
-    res.render(viewFilePath, result);
+    Trace.create(common.createTrace(req.user[0].username, "ERROR(" + result.status + "): " + result, true))
+    .exec(function(err, trace) { 
+      res.render(viewFilePath, result);
+    });
+
   });
 
 };

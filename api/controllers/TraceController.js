@@ -14,6 +14,8 @@ module.exports = {
 	find: function(req, res) {
 		pageOptions.defaultHolderName = sails.config.default_territory_holder;
     pageOptions.breadcrumbs = [{name : 'Territories', link : '/territory'}, {name : 'View traces', link : null}];
+    pageOptions.currentUsername = req.user[0].username;
+    pageOptions.currentUserType = req.user[0].type;
 
 		if(req.method == 'GET') {
 			var search_start = {};
@@ -26,13 +28,17 @@ module.exports = {
 				search_username = { username:req.user[0].username };
 			}
 
+			var search_admin = req.user[0].username == 'admin' ? {} : {only_admin:false};
+
 			var search_limit = {};
 			if(req.query.limit) search_limit = req.query.limit;
 
 			Trace.find(search_username)
 			.where(search_start)
 			.where(search_end)
+			.where(search_admin)
 			.limit(search_limit)
+			.sort({ trace_date: 'desc' })
 			.exec(function(err, t){
 	      return res.view({
 	        viewOptions: pageOptions,
