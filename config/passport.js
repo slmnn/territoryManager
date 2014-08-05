@@ -29,8 +29,8 @@ passport.use(new LocalStrategy(
         });
       }
       if(process.env.USE_BCRYPT == 'true') {
-        bcrypt.compare(password, user[0].password, function(err, res) {
-          if (!res) {
+        bcrypt.compare(password, user[0].password, function(err, ok) {
+          if (!ok) {
             Trace.create(common.createTrace(username, "Failed log in attempt because of wrong password.", true))
             .exec(function(err, trace) { 
               return done(null, false, { message: 'Invalid Password'}); 
