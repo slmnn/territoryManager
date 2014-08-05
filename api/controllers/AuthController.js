@@ -34,11 +34,13 @@ module.exports = {
   process: function(req,res){
     passport.authenticate('local', function(err, user, info){
       if ((err) || (!user)) {
-        res.redirect('/login');
-        return;
+        Trace.create(common.createTrace('unknown', "Failed login attempt from IP " + req.ip, true))
+        .exec(function(err, trace) { 
+          return res.redirect('/login');
+        });
       }
       req.logIn(user, function(err){
-        if (err) res.redirect('/login');
+        if (err) return res.redirect('/login');
         return res.redirect('/login');
       });
     })(req, res);
