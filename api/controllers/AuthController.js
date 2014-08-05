@@ -34,10 +34,8 @@ module.exports = {
   process: function(req,res){
     passport.authenticate('local', function(err, user, info){
       if ((err) || (!user)) {
-        Trace.create(common.createTrace('unknown', "Failed login attempt from IP " + req.ip, true))
-        .exec(function(err, trace) { 
-          return res.redirect('/login');
-        });
+        console.log("FAILED LOGIN ATTEMPT!!!");
+        return res.redirect('/login');
       }
       req.logIn(user, function(err){
         if (err) return res.redirect('/login');
