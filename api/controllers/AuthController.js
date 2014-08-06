@@ -28,6 +28,8 @@ module.exports = {
         .exec(function(err, trace) { 
           res.redirect('/territory');
         });
+      } else {
+        res.redirect('/territory');
       }
   	} else {
     	res.view("auth/login");
