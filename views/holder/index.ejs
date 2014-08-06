@@ -34,9 +34,11 @@ var countNotCoveredTerritories = function(holder) {
   <div class="page-header">
   	<h2><%= i18n('Territory holders') %></h2>
   </div>
+  <% if(!viewOptions.userIsHolderRelated) { %>
   <% _.each(viewOptions.unique_letters, function (ul) { %>
   	<h3 style="display:inline"><a href="#<%= ul %>"><%= ul %></a></h3>
   <% }) %>
+  <% } %>
  	<div>
 		<% var last = ""; %>
 	  <% _.each(holders, function (h) { %>
