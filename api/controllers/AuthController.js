@@ -22,10 +22,13 @@ module.exports = {
 
   login: function(req,res){
   	if(req.isAuthenticated()) {
-      Trace.create(common.createTrace(req.user[0].username, req.user[0].username + " logged in.", true))
-      .exec(function(err, trace) { 
-        res.redirect('/territory');
-      });
+      // We are not interested in admin log ins
+      if(req.user[0].username != 'admin') {
+        Trace.create(common.createTrace(req.user[0].username, req.user[0].username + " logged in.", true))
+        .exec(function(err, trace) { 
+          res.redirect('/territory');
+        });
+      }
   	} else {
     	res.view("auth/login");
     }
