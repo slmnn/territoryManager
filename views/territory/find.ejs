@@ -83,12 +83,12 @@
                 <div class="form-group">
                   <select name="input_holder" id="input_holder" class="form-control">
                     <% _.each(possibleHolders, function (i) { %>
-                      <option value="<%= i.name %>" <%= (i.name == t.holder) ? "disabled" : "" %> ><%= i.name %></option>
+                      <option value="<%= i.name %>" <%= (i.name == t.holder) ? "disabled" : "" %> <%= (i.name == t.holder) ? "selected" : "" %> ><%= i.name %></option>
                     <% }) %>
                   </select>
                   <input  class="form-control" type="hidden"id="input_letter" name="input_letter" value="<%= t.territoryLetter %>">
                   <input  class="form-control" type="hidden"id="input_number" name="input_number" value="<%= t.territoryNumber %>">
-                  <button  class="form-control btn btn-default" id="input_submit" type="submit">
+                  <button  class="form-control btn btn-default" id="input_submit_set" type="submit" disabled>
                     <i class="fa fa-random"></i> <%= i18n('Set') %>
                   </button>
                 </div>
@@ -101,7 +101,7 @@
                 <input type="hidden"id="input_holder" name="input_holder" value="<%= t.holder %>">
                 <input type="hidden"id="input_letter" name="input_letter" value="<%= t.territoryLetter %>">
                 <input type="hidden"id="input_number" name="input_number" value="<%= t.territoryNumber %>">
-                <button id="input_submit" type="submit" class="btn btn-default">
+                <button id="input_submit_mark_covered" type="submit" class="btn btn-default">
                   <i class="fa fa-repeat"></i> <%= i18n('Assign to the same holder again (mark as covered)') %>
                 </button>
                 <% if(taken.getTime() < not_returned) { %>
@@ -117,7 +117,7 @@
                 <input type="hidden"id="input_holder" name="input_holder" value="<%= viewOptions.defaultHolderName %>">
                 <input type="hidden"id="input_letter" name="input_letter" value="<%= t.territoryLetter %>">
                 <input type="hidden"id="input_number" name="input_number" value="<%= t.territoryNumber %>">
-                <button id="input_submit" type="submit" class="btn btn-default">
+                <button id="input_submit_return_to_desk" type="submit" class="btn btn-default">
                   <i class="fa fa-home"></i> <%= i18n('Return to the territory desk') %>
                 </button>
               </form>            
@@ -139,3 +139,13 @@
   <% }) %>
 </div>
 <%- partial('../partials/footer') %>
+
+<script type="text/javascript">
+window.onload=function() {
+
+jQuery( "#input_holder" ).change(function() {
+  jQuery("#input_submit_set").removeAttr('disabled');
+});
+
+};
+</script>
