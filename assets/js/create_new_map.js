@@ -5,8 +5,8 @@
 	var myZoom = 13;
 	var myMarkerIsDraggable = true;
 	var myCoordsLenght = 6;
-	var defaultLat = 61.475444;
-	var defaultLng = 23.882672;
+	var defaultLat = 61.510437; // 61.510437, 23.665239
+	var defaultLng = 23.665239;
 
 	// creates the map
 	// zooms
