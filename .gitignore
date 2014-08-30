@@ -45,3 +45,6 @@ territoryManager.sublime-workspace
 # local config
 ########################
 config/local.js
+
+logs.txt
+
