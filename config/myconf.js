@@ -2,19 +2,19 @@ module.exports = {
   sc_salt : process.env.SC_SALT,
   sc_password : process.env.SC_PASSWORD,
 
-  default_territory_holder : 'Aluepöytä',
-  default_territory_holder_id : '5310a361156abf701b063329',
+  default_territory_holder : process.env.DEFAULT_HOLDER_NAME,
+  default_territory_holder_id : process.env.DEFAULT_HOLDER_ID,
   admin_init_password : '2348jhj3hh',
 
   limit_for_rarely_covered_territory : process.env.LIMIT_RARELY_COVERED || 365, // days
   limit_for_email_notification : process.env.LIMIT_EMAIL_NOTIFICATION || 180,
-  territory_letters : ['A','E','H','K','L','M','N','S','V','B'],
+  territory_letters : eval(process.env.TERRITORY_LETTERS),
   territory_types : ['Normal', 'Business', 'Phone'],
 
   smtp_username : process.env.SMTP_USERNAME,
   smtp_password : process.env.SMTP_PASSWORD,
 
-  notificationEmail_sender_address : 'Tampere-Messukylä seurakunta <tampere.messukyla@gmail.com>',
+  notificationEmail_sender_address : 'Pispala seurakunta <srk.pispala@gmail.com>',
   notificationEmail_new_territory : {
   	title: 'Olet ottanut uuden alueen _territoryCode',
   	body: 'Hei _holderName, <br> \
@@ -34,7 +34,7 @@ _listAllTerritoryCodes\
 <br>\
 <br>\
 Terveisin,<br>\
-Tampere-Messukylä, alueveljet'
+Pispala, alueveljet'
   },  
   notificationEmail_removed_territory : {
     title: 'Olet luovuttanut pois alueen _territoryCode',
@@ -53,7 +53,7 @@ _listAllTerritoryCodes\
 <br>\
 <br>\
 Terveisin,<br>\
-Tampere-Messukylä, alueveljet'
+Pispala, alueveljet'
   },
 
   notificationEmail_notCovered_territory : {
@@ -82,7 +82,7 @@ _listAllTerritoryCodes\
 <br>\
 <br>\
 Terveisin,<br>\
-Tampere-Messukylä, alueveljet'
+Pispala, alueveljet'
   }
 
 };
