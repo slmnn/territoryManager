@@ -47,6 +47,15 @@
 		</div>
 
 		<div class="control-group">
+		  <label class="control-label" for="input_covered_date"><%= i18n('Covered') %></label>
+		  <div class="controls">
+		  	<% var today = new Date(); %>
+		    <input id="input_covered_date" value="<%= today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() %>" name="input_covered_date" type="date" placeholder="yyyy-mm-dd" class="input-xlarge">
+		    <br><small><%= i18n('If the datepicker does not work, type the date in RFC3339 format: yyyy-mm-dd.') %></small>
+		  </div>
+		</div>
+
+		<div class="control-group">
 		  <label class="control-label" for="input_description"><%= i18n('Description') %></label>
 		  <div class="controls">                     
 		    <textarea class="field span4" rows="6" id="input_description" name="input_description" placeholder="<%= i18n('Address, etc.') %>"></textarea>

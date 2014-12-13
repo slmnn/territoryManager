@@ -38,6 +38,15 @@ var figureOutPossibleLetters = function() {
   return sails.config.territory_letters;
 };
 
+var parseInputDate = function(in_dateString) {
+  var date = new Date(Date.parse(in_dateString));
+  if(isNaN( date.getTime() )) {
+    return new Date();
+  } else {
+    return date;
+  }
+};
+
 var createNewTerritory = function(in_territory, callback) {
   // TODO: Should sanitize letter and number
   if(!in_territory.letter || !in_territory.number) {
@@ -62,8 +71,8 @@ var createNewTerritory = function(in_territory, callback) {
           territoryNumber : parseInt(in_territory.number),
           territoryCode   : in_territory.letter + in_territory.number,
           type : in_territory.type,
-          taken : new Date(),
-          reallyTaken : new Date(),
+          taken : parseInputDate(in_territory.covered),
+          reallyTaken : parseInputDate(in_territory.covered),
           lat : in_territory.lat,
           lng : in_territory.lng,
           description : in_territory.description,
@@ -649,6 +658,7 @@ module.exports = {
           letter : request.body.input_letter, 
           number : parseInt(request.body.input_number), 
           type : request.body.input_type, 
+          covered : request.body.input_covered_date,
           lat : request.body.input_lat, 
           lng : request.body.input_lng, 
           description : request.body.input_description

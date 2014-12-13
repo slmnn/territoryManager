@@ -9,6 +9,7 @@
   "Email notification limit (days)" : "Sähköpostimuistutuksen raja (päiviä)",
   "Backup email" : "Sähköposti varmuuskopioille",
   "Edit application settings" : "Muokkaa sovelluksen asetuksia",
+  "If the datepicker does not work, type the date in RFC3339 format: yyyy-mm-dd.":"Jos päivämäärävalitsin ei toimi, kirjoita päiväys muodossa 'VVVV-KK-PP'",
   "territories" : "aluetta",
   "Territory" : "Alue",
   "Traces" : "Jäljet",

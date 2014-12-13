@@ -13,8 +13,12 @@ module.exports.bootstrap = function (cb) {
   // It's very important to trigger this callack method when you are finished 
   // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
   App.find().exec(function(err, a) {
-  	sails.config.limit_for_rarely_covered_territory = a[0].notCoveredLimit || 365;
-  	sails.config.limit_for_email_notification = a[0].notCoveredWarningEmailLimit || 180;
-	  cb();  	
+  	if(err || a.length == 0) {
+  		cb();
+  	} else {
+	  	sails.config.limit_for_rarely_covered_territory = a[0].notCoveredLimit || 365;
+	  	sails.config.limit_for_email_notification = a[0].notCoveredWarningEmailLimit || 180;
+		  cb();    		
+  	}
   })
 };
