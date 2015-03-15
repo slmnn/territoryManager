@@ -647,10 +647,14 @@ module.exports = {
     pageOptions.breadcrumbs = [{name : 'Territories', link : '/territory'}, {name : 'Add new territory', link : null}];
     var possibleLetters = figureOutPossibleLetters();
     if(request.method == 'GET') {
-      return response.view({
-        viewOptions: pageOptions,
-        availableLetters : possibleLetters,
-        actionResult : "Please input territory information."
+      Holder.find().exec(function(err, h) {
+        var possibleHolders = h;
+        return response.view({
+          viewOptions: pageOptions,
+          possibleHolders : possibleHolders.sort(function(a,b){if(a.name>b.name)return 1; if(a.name<b.name)return -1; else return 0;}),
+          availableLetters : possibleLetters,
+          actionResult : "Please input territory information."
+        });
       });
     } else if(request.method == 'POST') {
       createNewTerritory(
@@ -707,6 +711,7 @@ module.exports = {
             return response.json("There is no suitable territory", 500);
           }
           t = t[0];
+          var covered_date = !request.body.input_covered_date ? new Date() : parseInputDate(request.body.input_covered_date);
           if(request.body.input_holder && request.body.input_holder.length > 0) {
             Holder.findOne({'name' : request.body.input_holder})
             .exec(function(err, h) {
@@ -716,16 +721,15 @@ module.exports = {
                 return response.json("Holder " + request.body.input_holder +  " is not in the system. Add her first.", 500);
               }
               if(t.holder != h.id) {
-                t.reallyTaken = new Date();
+                t.reallyTaken = covered_date;
               }
               if(!t.holderHistory) {
                 t.holderHistory = [];
               }
-              var now = new Date();
               var lastCoveredTime_old = t.lastCoveredTime;
               if(t.holder != sails.config.default_territory_holder_id) {
                 var taken = new Date(t.taken);
-                t.lastCoveredTime = now.getTime() - taken.getTime();
+                t.lastCoveredTime = covered_date.getTime() - taken.getTime();
               }
               // If the last covered time was less than 15 min, we will remove the
               // data from territory history
@@ -734,9 +738,9 @@ module.exports = {
                 t.lastCoveredTime = lastCoveredTime_old;
                 t.holderHistory.splice(-1,1);
               }
-              t.holderHistory.push([t.holder, now]);
+              t.holderHistory.push([t.holder, covered_date]);
               t.holder = h.id;
-              t.taken = new Date();
+              t.taken = covered_date;
               async.parallel([
                 function(cb) {
                   t.save(function(err) {

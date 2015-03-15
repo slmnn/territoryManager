@@ -81,6 +81,18 @@
             <dd>
               <form action="/territory/actions/holder" method="post" class="form-inline" role="form">
                 <div class="form-group">
+                  
+                  <% if(viewOptions.currentUsername == "admin") { %>
+                    <div class="control-group">
+                      <label class="control-label" for="input_covered_date"><%= i18n('Covered') %></label>
+                      <div class="controls">
+                        <% var today = new Date(); %>
+                        <input id="input_covered_date" value="<%= today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() %>" name="input_covered_date" type="date" placeholder="yyyy-mm-dd" class="input-xlarge">
+                        <br><small><%= i18n('If the datepicker does not work, type the date in RFC3339 format: yyyy-mm-dd.') %></small>
+                      </div>
+                    </div>
+                  <% } %>
+
                   <select name="input_holder" id="input_holder" class="form-control">
                     <% _.each(possibleHolders, function (i) { %>
                       <option value="<%= i.name %>" <%= (i.name == t.holder) ? "disabled" : "" %> <%= (i.name == t.holder) ? "selected" : "" %> ><%= i.name %></option>
