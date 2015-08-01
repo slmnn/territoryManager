@@ -421,7 +421,9 @@ module.exports = {
                   } 
                   var taken = new Date(t_all[i].taken);
                   taken = taken.getTime();
-                  if(not_covered_limit > taken && last_email_sent < (now - 30*1000*60*60*24)) {
+                  if(not_covered_limit > taken 
+                    && last_email_sent < (now - 30*1000*60*60*24)
+                    && t_all[i].holder != sails.config.default_territory_holder_id) {
                     not_covered_territory_emails++;
                   }
                 } else if(!t_all[i].notificationEmailDate && t_all[i].holder != sails.config.default_territory_holder_id) {
