@@ -5,8 +5,8 @@
 	var myZoom = 13;
 	var myMarkerIsDraggable = true;
 	var myCoordsLenght = 6;
-	var defaultLat = territoryLat || 61.475444;
-	var defaultLng = territoryLng || 23.882672;
+	var defaultLat = typeof territoryLat !== 'undefined' ? territoryLat : 61.475444;
+	var defaultLng = typeof territoryLng !== 'undefined' ? territoryLng : 23.882672;
 
 	// creates the map
 	// zooms
