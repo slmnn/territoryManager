@@ -95,8 +95,8 @@
 				bounds.extend (myMarker.position);
 
 		    google.maps.event.addListener(myMarker, 'click', function() {
-		        info_window.content = myMarker.content;
-		        info_window.open(map, myMarker);
+		        info_window.setContent(this.content);
+		        info_window.open(map, this);
 		    });
 
 				myMarker.setMap(map);
